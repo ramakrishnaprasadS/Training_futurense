@@ -15,7 +15,7 @@ use today27;
 use ram_db;
 
 show tables;
-
+ABS
 select *
  from emp1;
 
