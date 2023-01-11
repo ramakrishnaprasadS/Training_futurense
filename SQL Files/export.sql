@@ -24,10 +24,13 @@ mysqldump: [ERROR] unknown variable 'pot=3308'.
 C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u  root --port=3308 -p hr_db > new_hrdb.sql
 Enter password: *********
 
+----if we want to includes routines ....mysqldump -u  root --port=3308 --routines -p hr_db > new_hrdb.sql
 
 C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u  root --port=3308 -p hrbackup < new_hrdb.sql
 Enter password: *********
 ERROR 1049 (42000): Unknown database 'hrbackup'
+
+
 
 C:\Program Files\MySQL\MySQL Server 8.0\bin>mysql -u  root --port=3308 -p hrbackup < new_hrdb.sql
 Enter password: *********
