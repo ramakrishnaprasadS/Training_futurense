@@ -25,7 +25,7 @@ CREATE TABLE Passenger
 );
 
 ALTER TABLE Passenger ADD CONSTRAINT `PK_Passenger` PRIMARY KEY(passenger_id);
-ALTER TABLE Passenger ADD CONSTRAINT `FK_Passenger_country` FOREIGN KEY(country_code) REFERENCES country(country_code) ON DELETE SET NULL;
+ALTER TABLE Passenger ADD CONSTRAINT `FK_Passenger_country` FOREIGN KEY(country_code) REFERENCES country(country_code);
 
 CREATE TABLE Airport
 (
@@ -36,7 +36,7 @@ CREATE TABLE Airport
 );
 
 ALTER TABLE Airport ADD CONSTRAINT `PK_Airport` PRIMARY KEY(airport_code);
-ALTER TABLE Airport ADD CONSTRAINT `FK_Airport_country` FOREIGN KEY(country_code) REFERENCES country(country_code) ON DELETE SET NULL;
+ALTER TABLE Airport ADD CONSTRAINT `FK_Airport_country` FOREIGN KEY(country_code) REFERENCES country(country_code) ;
 
 
 CREATE TABLE Schedule
@@ -50,8 +50,8 @@ CREATE TABLE Schedule
 );
 
 ALTER TABLE Schedule ADD CONSTRAINT `PK_Schedule` PRIMARY KEY(schedule_id);
-ALTER TABLE Schedule ADD CONSTRAINT `FK_Schedule_Airport` FOREIGN KEY(origin_airport_code) REFERENCES Airport(airport_code) ON DELETE SET NULL;
-ALTER TABLE Schedule ADD CONSTRAINT `FK_Schedule_Airport` FOREIGN KEY(dest_airport_code) REFERENCES Airport(airport_code) ON DELETE SET NULL;
+ALTER TABLE Schedule ADD CONSTRAINT `FK_Schedule_Airport` FOREIGN KEY(origin_airport_code) REFERENCES Airport(airport_code) ;
+ALTER TABLE Schedule ADD CONSTRAINT `FK_Schedule_Airport` FOREIGN KEY(dest_airport_code) REFERENCES Airport(airport_code) ;
 
 
 CREATE TABLE Flight
@@ -61,7 +61,7 @@ CREATE TABLE Flight
     flight_status CHAR(5)
 );
 ALTER TABLE Flight ADD CONSTRAINT `PK_Flight` PRIMARY KEY(flight_id);
-ALTER TABLE Flight ADD CONSTRAINT `FK_Flight_Schedule` FOREIGN KEY(schedule_id) REFERENCES Schedule(schedule_id) ON DELETE SET NULL;
+ALTER TABLE Flight ADD CONSTRAINT `FK_Flight_Schedule` FOREIGN KEY(schedule_id) REFERENCES Schedule(schedule_id);
 
 
 CREATE TABLE Aircraft
@@ -73,7 +73,7 @@ CREATE TABLE Aircraft
 );
 
 ALTER TABLE Aircraft ADD CONSTRAINT `PK_Aircraft` PRIMARY KEY(aircraft_id);
-ALTER TABLE Aircraft ADD CONSTRAINT `FK_Aircraft_Flight` FOREIGN KEY(Flight_id) REFERENCES Flight(flight_id) ON DELETE SET NULL;
+ALTER TABLE Aircraft ADD CONSTRAINT `FK_Aircraft_Flight` FOREIGN KEY(Flight_id) REFERENCES Flight(flight_id);
 
 
 CREATE TABLE AircraftSeat
@@ -84,7 +84,7 @@ CREATE TABLE AircraftSeat
 );
 
 ALTER TABLE AircraftSeat ADD CONSTRAINT `PK_AircraftSeat` PRIMARY KEY(seat_id);
-ALTER TABLE AircraftSeat ADD CONSTRAINT `FK_AircraftSeat_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id) ON DELETE SET NULL;
+ALTER TABLE AircraftSeat ADD CONSTRAINT `FK_AircraftSeat_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id) ;
 
 CREATE TABLE TravelClass
 (
@@ -104,10 +104,10 @@ CREATE TABLE FlightSeatPrice
 );
 
 ALTER TABLE FlightSeatPrice ADD CONSTRAINT `PK_FlightSeatPrice` PRIMARY KEY();    ------doubt
-ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id) ON DELETE SET NULL;
-ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_Flight` FOREIGN KEY(flight_id) REFERENCES Flight(flight_id) ON DELETE SET NULL;
+ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id);
+ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_Flight` FOREIGN KEY(flight_id) REFERENCES Flight(flight_id) ;
 
-ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_AircraftSeat` FOREIGN KEY(seat_id) REFERENCES AircraftSeat(seat_id) ON DELETE SET NULL;
+ALTER TABLE FlightSeatPrice ADD CONSTRAINT `FK_FlightSeatPrice_AircraftSeat` FOREIGN KEY(seat_id) REFERENCES AircraftSeat(seat_id) ;
 
 
 
@@ -121,10 +121,10 @@ CREATE TABLE Booking
 );
 
 ALTER TABLE Booking ADD CONSTRAINT `PK_Booking` PRIMARY KEY(booking_id);    
-ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id) ON DELETE SET NULL;
-ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_Flight` FOREIGN KEY(flight_id) REFERENCES Flight(flight_id) ON DELETE SET NULL;
+ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_Aircraft` FOREIGN KEY(aircraft_id) REFERENCES Aircraft(aircraft_id) ;
+ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_Flight` FOREIGN KEY(flight_id) REFERENCES Flight(flight_id) ;
 
-ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_AircraftSeat` FOREIGN KEY(seat_id) REFERENCES AircraftSeat(seat_id) ON DELETE SET NULL;
+ALTER TABLE Booking ADD CONSTRAINT `FK_Booking_AircraftSeat` FOREIGN KEY(seat_id) REFERENCES AircraftSeat(seat_id) ;
 
 
 

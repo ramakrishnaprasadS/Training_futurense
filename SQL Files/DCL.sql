@@ -11,10 +11,11 @@ GRANT
 REVOKE
 
 
+
 previlages -- permissions to interact with database  
 */
 
---CREATING USER  
+--CREATING USER 
 
 CREATE USER 'user1'@'localhost' IDENTIFIED BY 'password';
 

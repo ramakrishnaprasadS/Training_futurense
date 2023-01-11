@@ -157,9 +157,15 @@ alter table emp_new DROP column c1;
 alter table emp_new drop contraint `pk_empid`;
 
 
+CREATE TABLE auto_1(c1 int primary key auto_increment,c2 date);
 
+INSERT INTO auto_1(c2) values(curdate()),("2021-05-21"),("2022-01-12");
 
+select * from auto_1;
 
+INSERT INTO auto_1(c2) values(now());
+
+select last_insert_id() from auto_1;
 
 
 
@@ -205,4 +211,7 @@ ALTER TABLE employees ADD CONSTRAINT `FK_jobs_employees_jobid_setnull` FOREIGN K
 
 
 -- INDEX syntax ---  CREATE INDEX index_name ON table_name(column_name);
+
+
+
  
