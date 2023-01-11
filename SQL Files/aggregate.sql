@@ -121,3 +121,7 @@ select job,min(sal) as min_sal
 from emp  
 group by job
 having min_sal>=3000;
+
+select round(132.3);
+
+select ceil(132.3);

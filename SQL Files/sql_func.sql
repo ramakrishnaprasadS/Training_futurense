@@ -87,9 +87,12 @@ select length(@str)-length(REPLACE(@str ,"A","")) AS cnt;
 --reporting functions
 --LPAD/RPAD --left/right padding with specified character to specified length   
 
+select REPLACE(1002,0,"");
 
+select CAST(REPLACE("1002","0","") AS INTEGER);
 
-select dname, lpad(dname,15,"*") as lpad, rpad(dname,15,"$") as rpad from dept;
+select  rpad(12,4,0);
+select lpad(dname,15,"$") as lpad from dept;
 
 
 --REPEAT --can repeat the string n number of times--

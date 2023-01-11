@@ -100,6 +100,72 @@ ALTER TABLE employees ADD CONSTRAINT  `PQ_employees_employeeid` PRIMARY KEY(empl
 
 ALTER TABLE employees ADD CONSTRAINT `FK_departmentid_manager_id` FOREIGN KEY(department_id,manager_id) REFERENCES departments(department_id,manager_id);
 
+
+--ALTER ADD cloumns,constrainsts(except not null)  
+
+---adding a column using alter // by default at end
+
+use hr_db;
+show tables;
+
+select * from emp_new;
+
+alter table emp_new add c7 numeric(11,2) first;
+
+alter table emp_new add c2 numeric(11,2) after employee_id;
+
+show create table employees;
+
+alter table emp_new add primary key(employee_id);
+
+
+alter table emp_new  add constraint `chk_newEmp` check(first_name in ('lex','Neena'));
+
+alter table emp_new add constraint 'FK_empNew' FOREIGN KEY(employee_id) REFERENCES employees(employee_id);
+
+/*
+modify
+null to not null
+chnage datatype
+change size
+chnage default
+
+*/
+
+alter table emp_new  modify first_name NOT NULL;
+
+
+alter table emp_new  modify c7 timestamp not null;
+
+
+alter table emp_new modify first_name varchar(30);
+
+
+---RENAME column,tables
+
+alter table emp_new RENAME column c7 to c1;
+
+show tables;
+
+alter table employee_stats RENAME to emp_stats;
+
+
+--DROP columns,constraints
+
+alter table emp_new DROP column c1;
+
+alter table emp_new drop contraint `pk_empid`;
+
+
+
+
+
+
+
+
+
+
+
 --Q5 
 
 

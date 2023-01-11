@@ -447,3 +447,52 @@ select group_concat(first_name),department_id
 from employees 
 where department_id=60 
 group by department_id;
+
+
+---Correlated update
+
+
+use hr_db;
+
+CREATE TABLE emp_new
+as select employee_id,first_name,department_id,job_id from employees;
+alter table emp_new add dept_name varchar(20);
+
+
+select * from emp_new;
+
+update emp_new e set dept_name=(select department_name from departments where department_id=e.department_id);
+
+
+--correlated delete
+
+
+delete from emp_new e where job_id in (select job_id from employees where employee_id=e.employee_id and employee_id=109);
+
+
+select count(*) from emp_new;
+
+
+---TRUNCATE
+/*
+DDL
+where clause cant be used
+no rollback
+truncate retains structure   --only removes data
+
+*/
+
+--DROP ---removes structure also
+---DELETE
+/*
+where
+dml
+rollback using
+start transaction
+only records are removed
+*/
+
+
+
+
+
