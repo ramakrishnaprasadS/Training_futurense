@@ -4,6 +4,7 @@ CREATE DATABASE IF NOT EXISTS today27 ;
 
 show databases;
 
+
 use today27;
 
 -- DATABASE 
