@@ -417,6 +417,86 @@ select * from employee_stats;
 
 
 
+/*
+procedure
+
+-may or maynot return value
+-does not contain return statement
+-cant be used directly woith sql statements
+
+
+functions
+
+-must and should return single value
+-return statement is a must
+-can be used with sql statements directly
+
+syntax
+
+CREATE FUNCTION <functionname> ()
+RETURNS data_type DETEREMINISTIC
+BEGIN 
+    DECLARE ....
+    statements..
+    .
+    .
+    RETURN 
+END
+
+*/
+
+/*--Create a function to pass employee_id as parameter  to return bonus for
+    sh_clerk 1.5*salary,sa_rep 1.75*salary, mk_man 2.0*salary others salary
+*/
+use hr_db;
+DELIMITER //
+
+CREATE FUNCTION fun_hr1(p1 INT)
+RETURNS numeric(11,2) DETERMINISTIC
+BEGIN 
+    DECLARE v1 numeric(11,2);
+    DECLARE v2 numeric(11,2);
+    DECLARE v3 varchar(20);
+    select job_id,salary into v3,v1 from employees where employee_id = p1;
+    if v3="sh_clerk" then set v2=1.5*v1;
+    elseif v3="sa_rep" then set v2=1.75*v1;
+    elseif v3="mk_man" then set v2=2.0*v1;
+    else set v2=v1;
+    end if;
+    return v2;
+END //
+
+DELIMITER ;
+
+select employee_id,hire_date,job_id,fun_hr1(employee_id) as bonus from employees;
+
+
+---find whether the employee is hired in leap year or NOT
+
+--date_format(concat(year(curdate()),"-12-31"),"%j");
+
+DELIMITER //
+
+CREATE FUNCTION fun_hr_leap(p1 INT)
+RETURNS varchar(20) DETERMINISTIC
+BEGIN 
+    DECLARE v1 date;
+    DECLARE v3 varchar(20);
+    select hire_date into v1 from employees where employee_id = p1;
+    if date_format(concat(year(v1),"-12-31"),"%j")=366 then set v3="leap year";
+    else set v3="non-leap year";
+    end if;
+    return v3;
+END //
+
+DELIMITER ;
+
+select employee_id,hire_date,fun_hr_leap(employee_id) as leap_or_not from employees;
+
+
+
+
+
 
 
 
