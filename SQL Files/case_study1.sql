@@ -91,6 +91,13 @@ select * from book;
 select * from bres;
 select * from member;
 
+DELETE FROM bcopy;
+DELETE FROM bloan;
+DELETE FROM book;
+DELETE FROM bres;
+DELETE FROM member;
+
+
 desc member;
 desc book;
 
@@ -107,20 +114,137 @@ DELIMITER ;
 DROP PROCEDURE add_member;
 
 call add_member("Rama",9666112617);
+call add_member("Parv",9888112617);
 
 
 ---procedure to add new book to book table and the same time copy of it in bcopy table
 
 DELIMITER //
 
-CREATE PROCEDURE add_book(B_PUB varchar(20),B_AUTH varchar(20),B_TITLE varchar(25),B_SUB varchar(25))
+CREATE TRIGGER add_book_copy
+after insert on book
+for each row
 BEGIN 
-    INSERT INTO book(BPUB,BAUTH,BTITLE,BSUB) values(B_PUB,B_AUTH,B_TITLE,B_SUB);
-    INSERT INTO bcopy(BPUB,BAUTH,BTITLE,BSUB) values(B_PUB,B_AUTH,B_TITLE,B_SUB);
-
+   INSERT INTO bcopy(C_ID,BOOKID,STATUS) values(1,new.bookid,"available");
 END //
 
 DELIMITER ;
+
+
+DELIMITER //
+
+CREATE PROCEDURE add_book(B_PUB varchar(20),B_AUTH varchar(20),B_TITLE varchar(25),B_SUB varchar(25))
+BEGIN 
+    INSERT INTO book(BPUB,BAUTH,BTITLE,BSUB) values(B_PUB,B_AUTH,B_TITLE,B_SUB);
+END //
+
+DELIMITER ;
+
+select * from book;
+
+select * from bcopy;
+
+call add_book("classmate","ram","sqllite","db");
+call add_book("Ajantha","hari","java","programming");
+
+
+DROP PROCEDURE add_book;
+
+
+--function for renting
+
+select * from bloan;
+select * from member;
+select * from bcopy;
+select * from bres;
+
+DELIMITER //
+
+CREATE FUNCTION new_rental(bid INT,memberid INT)
+RETURNS DATE DETERMINISTIC
+BEGIN
+   
+   DECLARE book_status varchar(20);
+   DECLARE cid INT;
+   select STATUS,C_ID INTO book_status,cid from bcopy where bookid=bid and status="available" limit 1;
+   if (cid is not null)
+      then
+      update bcopy set status="rented" where bookid=bid and C_ID=cid;
+      INSERT INTO bloan(ldate,bookid,mid,exp_date,c_id) values(curdate(),bid,memberid,date_add(curdate(),INTERVAL '3' day),cid);
+      
+      return date_add(curdate(),INTERVAL '3' day);
+   else 
+      call reserve_book(memberid,bid);
+      return null;
+   end if;
+   
+END //
+
+DELIMITER ;
+DROP FUNCTION new_rental;
+select new_rental(1,5);
+select * from bcopy;
+select * from member;
+select * from bloan;
+select * from bres;
+
+desc bloan;
+
+select TIMESTAMPDIFF(day,"2023-01-10",curdate())*5;
+
+---return book
+
+DELIMITER //
+
+CREATE PROCEDURE return_book(IN bid INT(15),IN cid INT(5))
+BEGIN
+   DECLARE memberid INT;
+   DECLARE expdate date;
+   select mid,exp_date into memberid,expdate from bloan where bookid=bid and c_id=cid;
+   if bid in (select bookid from bres) then update bcopy set status="reserved" where c_id=cid and bookid=bid;
+   else update bcopy set status="available" where c_id=cid and bookid=bid;
+   end if;
+   if curdate()<=expdate then update bloan set act_date=curdate() where bookid=bid and c_id=cid;
+   else 
+      update bloan set act_date=curdate() where bookid=bid and c_id=cid;
+      update bloan set fine=TIMESTAMPDIFF(day,exp_date,curdate())*5 where bookid=bid and c_id=cid;
+   end if;
+END //
+
+
+DELIMITER;
+
+DROP PROCEDURE return_book;
+
+call return_book(1,2);
+
+select new_rental(1,5); --since reserved not allowing to rent
+call return_book(1,1);
+select new_rental(1,5);
+
+
+
+
+
+
+---reserve book
+
+DELIMITER //
+
+CREATE PROCEDURE reserve_book(IN memberid INT(15),IN bid INT(5))
+BEGIN
+   INSERT INTO BRES(MID,BOOKID,RESDATE) values(memberid,bid,curdate());
+END //
+
+DELIMITER;
+
+
+
+
+
+DROP PROCEDURE reserve_book;
+
+   
 
 
 
