@@ -1,0 +1,126 @@
+-- Active: 1671708805339@@127.0.0.1@3308@ram_db
+
+
+CREATE DATABASE case_study1_db;
+use case_study1_db;
+
+CREATE TABLE BOOK 
+   (	BOOKID int(15)   PRIMARY KEY auto_increment, 
+	BPUB varchar(20), 
+	BAUTH varchar(20), 
+	BTITLE varchar(25), 
+	BSUB varchar(25)
+   ) ;
+
+
+  CREATE TABLE MEMBER 
+   (	MID int(4)   PRIMARY KEY auto_increment, 
+	MNAME varchar(20), 
+	MPHONE numeric(10,0),
+        JOINDATE DATE
+   ) ;
+
+
+
+  CREATE TABLE BCOPY 
+   (	C_ID int(4), 
+	BOOKID int(15), 
+	STATUS varchar(20) CHECK (status in('available','rented','reserved')),
+        PRIMARY KEY (C_ID,BOOKID)
+   ); 
+
+
+
+  CREATE TABLE BRES 
+   (	MID int(4) , 
+	BOOKID int(15) REFERENCES BOOK, 
+	RESDATE DATE,PRIMARY KEY (MID, BOOKID, RESDATE),
+        foreign key(mid) references member(mid)
+   ) ;
+
+
+
+
+  CREATE TABLE BLOAN 
+   (	BOOKID int(4), 
+	LDATE DATE, 
+	FINE numeric(11,2), 
+	MID int(4), 
+	EXP_DATE DATE DEFAULT (curdate()+2), 
+	ACT_DATE DATE, 
+	C_ID int(4),
+  FOREIGN KEY (C_ID, BOOKID)
+	  REFERENCES BCOPY (C_ID, BOOKID),
+ foreign key(mid) references member(mid)
+   ) ;
+
+
+show tables;
+
+
+Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+values ('IDG Books','Carol','Oracle Bible','Database');
+Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+values ('TMH','James','Information Systems','I.Science');
+Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+values ('SPD','Shah','Java EB 5','Java');
+Insert into BOOK (BPUB,BAUTH,BTITLE,BSUB) 
+values ('BPB','Deshpande','P.T.Olap','Database');
+
+
+Insert into MEMBER (MNAME,MPHONE,JOINDATE) 
+values ('rahul',9343438641,(curdate()-3));
+Insert into MEMBER (MNAME,MPHONE,joindate)
+ values ('raj',9880138898,(curdate()-2));
+Insert into MEMBER (MNAME,MPHONE,joindate) 
+values ('mahesh',9900780859,curdate());
+
+
+
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,1,'available');
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (2,1,'available');
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,2,'available');
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (2,2,'available');
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,3,'available');
+Insert into BCOPY (C_ID,BOOKID,STATUS) values (1,4,'available');
+
+
+select * from bcopy;
+select * from bloan;
+select * from book;
+select * from bres;
+select * from member;
+
+desc member;
+desc book;
+
+--procedure to add new member to member table
+DELIMITER //
+
+CREATE PROCEDURE add_member(m_name varchar(20),m_phone DECIMAL(10,0))
+BEGIN 
+    INSERT INTO member(mname,mphone,joindate) values(m_name,m_phone,curdate());
+END //
+
+DELIMITER ;
+
+DROP PROCEDURE add_member;
+
+call add_member("Rama",9666112617);
+
+
+---procedure to add new book to book table and the same time copy of it in bcopy table
+
+DELIMITER //
+
+CREATE PROCEDURE add_book(B_PUB varchar(20),B_AUTH varchar(20),B_TITLE varchar(25),B_SUB varchar(25))
+BEGIN 
+    INSERT INTO book(BPUB,BAUTH,BTITLE,BSUB) values(B_PUB,B_AUTH,B_TITLE,B_SUB);
+    INSERT INTO bcopy(BPUB,BAUTH,BTITLE,BSUB) values(B_PUB,B_AUTH,B_TITLE,B_SUB);
+
+END //
+
+DELIMITER ;
+
+
+

@@ -494,6 +494,149 @@ DELIMITER ;
 select employee_id,hire_date,fun_hr_leap(employee_id) as leap_or_not from employees;
 
 
+---employees will get a joining bonus who joined       --------trigger
+/*
+on or before 15 of a month will be paid joining bonus on the last friday after 1 year
+
+2022-01-15      2023-01-26  last friday
+
+2022-01-18      2023-02-26  last friday
+*/
+
+
+select employee_id,first_name from employees where hire_date in (select min(hire_date) from employees)
+;
+
+--TRIGGER  --whenever event occurs triggers fires
+/*
+INSERT 
+UPDATE
+DELETE
+
+---TRIGGER TIMINGS
+    -before
+    -after
+
+--row level triggers
+    -new  --INSERT,UPDATE
+    -old   --DELETE,UPDATE
+
+syntax
+
+CREATE TRIGGER <TRIGGER NAME>
+before/after <event_name> ON <table_name>
+FOR EACH ROW
+BEGIN 
+    statements
+END
+
+*/
+
+--create a trigger to insert into retired table whenever delete happens on employees table
+create table retired as select first_name from employees;
+
+create table emp1 as select * from employees;
+
+DELIMITER //
+
+CREATE TRIGGER trig_hr_del1
+before delete on emp1
+for each row
+begin
+    insert into retired values(old.first_name);
+end //
+
+DELIMITER ;
+
+DELETE from emp1 where hire_date in (select min(hire_date) from employees);
+
+select * from retired;
+
+select * from emp1;
+
+
+create table date_table(slno int primary key, date1 date check(date1<=curdate())); --doesn't work
+
+create table date_table(slno int primary key, date1 date );
+
+DELIMITER //
+
+CREATE TRIGGER trig_check 
+before insert on date_table 
+for each row
+BEGIN
+    if new.date1 > curdate() then 
+    signal sqlstate '45000' set message_text="**date1<=curdate()**";
+    end if;
+END //
+
+DELIMITER ;
+
+insert into date_table values(1,'2023-01-31');
+
+---create a trigger to restrict the decrement of salary------------task--------
+
+
+DELIMITER //
+
+CREATE TRIGGER trig_redu
+before update on emp1
+for each ROW
+begin 
+    if new.salary<old.salary then 
+    signal sqlstate '45000' set message_text="**beware! I want hike**";
+    end if;
+end//
+
+DELIMITER;
+
+--create a trigger to update balance in account table whenever wd(withdrawl),dep(deposit), happens
+
+create table account
+(
+    accno int primary key,
+    name varchar(20),
+    balance numeric(11,2)
+);
+
+INSERT INTO account values(12345,"hari",10000);
+
+create table trans
+(
+    accno int,
+    wd numeric(11,2),
+    dep numeric(11,2),
+    foreign key(accno) references account(accno)
+);
+
+DELIMITER //
+
+CREATE TRIGGER update_balance
+after insert on trans
+for each row
+BEGIN 
+    if new.dep is not null then 
+        update account set balance = balance+new.dep where accno=new.accno;
+    else
+        update account set balance = balance-new.wd where accno=new.accno;
+    end if;
+end //
+
+DELIMITER ;
+
+INSERT INTO trans(accno,dep) values(1717,100000000);
+INSERT INTO account values(1717,"Rama Krishna S",0);
+
+select * from account;
+
+
+
+
+
+
+
+
+
 
 
 
