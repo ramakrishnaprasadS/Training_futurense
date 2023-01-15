@@ -59,7 +59,7 @@ INSERT INTO pri_tab1(c1,c2) values(1001,'s');
 
 INSERT INTO for_tab1(c1,c3) values(1001,"2021-05-27");
 
-select * from pri
+select * from pri;
 
 
                                 

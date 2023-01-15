@@ -45,7 +45,7 @@ select CONCAT(lower(RIGHT(ename,length(ename)-1)),LEFT(ename,1)) AS new_name fro
 
 
 
---INSTR --position first occurance of specified substring in given string
+--INSTR --position of first occurance of specified substring in given string
 
 
 select INSTR("Javascript","a");

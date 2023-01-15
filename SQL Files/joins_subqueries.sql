@@ -483,6 +483,7 @@ truncate retains structure   --only removes data
 */
 
 --DROP ---removes structure also
+
 ---DELETE
 /*
 where

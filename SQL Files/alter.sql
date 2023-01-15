@@ -121,6 +121,11 @@ alter table emp_new add primary key(employee_id);
 
 alter table emp_new  add constraint `chk_newEmp` check(first_name in ('lex','Neena'));
 
+ALTER TABLE t1 ALTER CHECK t1_chk_1 NOT ENFORCED;
+
+ ALTER TABLE t1 ALTER CHECK t1_chk_2 ENFORCED;
+
+
 alter table emp_new add constraint 'FK_empNew' FOREIGN KEY(employee_id) REFERENCES employees(employee_id);
 
 /*
@@ -213,5 +218,10 @@ ALTER TABLE employees ADD CONSTRAINT `FK_jobs_employees_jobid_setnull` FOREIGN K
 -- INDEX syntax ---  CREATE INDEX index_name ON table_name(column_name);
 
 
-
+/*
+To achieve high performance, TRUNCATE TABLE bypasses the DML method of deleting data. 
+Thus, it does not cause ON DELETE triggers to fire, it cannot be performed for InnoDB tables with parent-child foreign key relationships,
+ and it cannot be rolled back like a DML operation. 
+ However, TRUNCATE TABLE operations on tables that use an atomic DDL-supported storage engine are either fully committed or rolled back if the server halts during their operation. 
+*/
  

@@ -12,7 +12,6 @@ START TRANSACTION;
 DML
 COMMIT/ROLLBACK;
 
-
 */
 
 --Any transations using start transaction ,subsequent ddl,dcl transactions will commit the previous transactions.

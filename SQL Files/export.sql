@@ -14,6 +14,7 @@ show tables;
 
 C:\Windows\System32>cd C:\Program Files\MySQL\MySQL Server 8.0\bin
 
+
 C:\Program Files\MySQL\MySQL Server 8.0\bin>mysqldump -u  root -p hr_db > new_hrdb.sql
 Enter password: *********
 mysqldump: Got error: 2003: Can't connect to MySQL server on 'localhost:3306' (10061) when trying to connect

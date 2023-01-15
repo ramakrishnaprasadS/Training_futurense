@@ -70,12 +70,13 @@ select QUARTER(now()); --4
 -- %Y => 4 digit year 
 -- %d => day count in month  
 -- %D =>adds th,rd to date
+
 -- %w => day count in week  
 -- %j => day count in a year  
 
 
 
--- STR_TO_DATE() --converts date to string  
+-- STR_TO_DATE() --converts string to date  
 
 select str_to_date("10-may-2022","%d-%M-%Y"); --2022-05-10
 
@@ -135,9 +136,10 @@ select timestampdiff(day,"1999-05-28",now()); --op in days
 
 
 
+
 ----display how many years months old are you 
 
-set @dob ="2022-12-30";
+set @dob ="1999-5-28";
 
 select timestampdiff(year,@dob,now());
 

@@ -7,6 +7,28 @@ show databases;
 
 use today27;
 
+CREATE TABLE samp1
+(
+   id int(5),
+   fname varchar(10),
+   age int(5)
+);
+
+DROP TABLE samp1;
+DELETE FROM samp1;
+
+select * from samp1;
+
+ALTER TABLE samp1 ADD constraint `samp1_PK` PRIMARY KEY(id);
+ALTER TABLE samp1 ADD constraint `samp1_age_chk18` check(age>=18);
+INSERT INTO samp1(id,fname,age) values
+(1,"ram",24),
+(2,"john",18),
+(4,"hari",23),
+(3,"sekhar",23);
+
+
+
 -- DATABASE 
    --for storing data DDL,DCL,TC
    /* SELECT (projection) *

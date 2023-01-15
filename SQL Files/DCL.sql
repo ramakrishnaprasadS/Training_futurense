@@ -13,6 +13,7 @@ REVOKE
 
 
 previlages -- permissions to interact with database  
+
 */
 
 --CREATING USER 

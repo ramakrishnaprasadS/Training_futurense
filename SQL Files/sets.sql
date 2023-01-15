@@ -61,6 +61,7 @@ select null ,sum(sal) from emp;
 select job,sum(sal) from emp GROUP BY job with rollup;
 
 
+
 --rollup gives summary value for first column only 
 select sum(sal),deptno,job 
 from emp 
