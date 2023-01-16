@@ -186,9 +186,11 @@ END //
 
 DELIMITER ;
 
-call find_even_odd(0,101);
 
+call find_even_odd(0,101);
 select * from odd_even;
+
+delete  from odd_even;
 
 
 --create procedure to pass your birthdate as parameter , print day of birth starting from birthdate to current date

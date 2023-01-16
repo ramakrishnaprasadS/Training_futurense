@@ -166,16 +166,23 @@ BEGIN
    
    DECLARE book_status varchar(20);
    DECLARE cid INT;
+   DECLARE bres_mid INT;
+   DECLARE bres_bookid INT;
+   DECLARE avail_date date;
    select STATUS,C_ID INTO book_status,cid from bcopy where bookid=bid and status="available" limit 1;
    if (cid is not null)
       then
       update bcopy set status="rented" where bookid=bid and C_ID=cid;
       INSERT INTO bloan(ldate,bookid,mid,exp_date,c_id) values(curdate(),bid,memberid,date_add(curdate(),INTERVAL '3' day),cid);
-      
+      select mid,bookid into bres_mid,bres_bookid from bres;
+      if (bres_mid is not null) and (bres_bookid is not null) then DELETE from bres where mid=memberid and bookid=bid;
+      end if;
       return date_add(curdate(),INTERVAL '3' day);
    else 
+      select exp_date into avail_date from bloan where bookid=bid and act_date is null order by exp_date;
       call reserve_book(memberid,bid);
-      return null;
+      signal sqlstate '45000' set message_text=avail_date;
+      return message_text;
    end if;
    
 END //
@@ -201,14 +208,15 @@ BEGIN
    DECLARE memberid INT;
    DECLARE expdate date;
    select mid,exp_date into memberid,expdate from bloan where bookid=bid and c_id=cid;
-   if bid in (select bookid from bres) then update bcopy set status="reserved" where c_id=cid and bookid=bid;
-   else update bcopy set status="available" where c_id=cid and bookid=bid;
-   end if;
    if curdate()<=expdate then update bloan set act_date=curdate() where bookid=bid and c_id=cid;
    else 
       update bloan set act_date=curdate() where bookid=bid and c_id=cid;
       update bloan set fine=TIMESTAMPDIFF(day,exp_date,curdate())*5 where bookid=bid and c_id=cid;
    end if;
+   if bid in (select bookid from bres) then update bcopy set status="reserved" where c_id=cid and bookid=bid;
+   else update bcopy set status="available" where c_id=cid and bookid=bid;
+   end if;
+   
 END //
 
 
