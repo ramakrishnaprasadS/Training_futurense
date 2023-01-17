@@ -26,3 +26,18 @@ select * from cte_2;
 
 with recursive cte_2 as (select curdate() "n" union all select date_add(n,interval '1' day) from cte_2 where cte_2.n<=last_day(curdate()))
 select * from cte_2;
+
+
+---------
+
+use ram_db;
+select * from emp;
+
+with dc AS (select deptno,count(*) cnt from emp group by deptno)
+select e.ename empl,e.deptno edep,
+       m.ename manager,m.deptno mdep,
+       dc1.cnt empcnt,
+       dc2.cnt managercnt from 
+       emp e join emp m on e.mgr=m.empno
+       join dc dc1 on e.deptno=dc1.deptno
+       join dc dc2 on m.deptno=dc2.deptno;
