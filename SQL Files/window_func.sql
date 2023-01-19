@@ -26,10 +26,12 @@ select s1.first_name,s1.salary, ( Select Sum(salary) From employees S2
                       )  running_sal
       From employees S1
       ;
-
+use hr_db;
 select first_name,salary,                     ---cummulative sum
-sum(salary) over(order by salary) as running_salary 
+sum(salary) over(order by salary desc) as running_salary 
 from employees;
+
+
 
 select first_name,salary,
 row_number() over() as row_num      -------row number
@@ -115,9 +117,10 @@ select first_name,salary,department_id,
 sum(salary) over(partition by department_id) as tot
 from employees;  
 
+
 --NTILE
 
-select NTILE(3) over(order by department_id) as n_tile, ----entire records divided into 3  groups
+select NTILE(6) over(order by department_id) as n_tile, ----entire records divided into 3  groups
 first_name,department_id from employees;
 
 
