@@ -1,3 +1,4 @@
+-- Active: 1671708805339@@127.0.0.1@3308@ram_db
 
 show tables;
 
@@ -65,6 +66,8 @@ PARTITION BY LIST COLUMNS (JOB)
 
 INSERT INTO LIST_JOB SELECT EMPNO,ENAME,JOB FROM check_extent;
 
+DROP TABLE LIST_JOB;
+
 explain select * from emp;
 
 explain select * from list_job;
@@ -128,7 +131,211 @@ where table_schema="ram_db" and table_name="emp";
 use ram_db;
 CREATE index id_idx on fruit(id);
 
+--can write using alter also
+
 explain format=tree select * from fruit where id=101;
+
+
+use hr_db;
+show tables;
+
+/*
+structure of table
+desc
+show columns
+show create table
+
+
+*/
+
+/*
+
+select
+----------------
+parsing
+  -optimising
+    -executing
+      -fetching
+*/
+
+/*
+
+
+index scan
+table scan
+lookup
+*/
+use ram_db;
+show tables;
+
+show indexes from emp;
+
+explain select ename from emp where job="clerk";
+
+explain format=tree select ename from emp where job="clerk";
+
+explain select * from dept where dname="sales";
+
+explain format=tree select * from dept where dname="sales";
+
+CREATE index dname_idx on dept(dname);
+
+--ALTER TABLE dept DROP index dname_idx;
+
+--find out employees working in deptno 20
+
+desc emp;
+
+explain select ename from emp where deptno=20 and job="clerk";
+explain format=tree select ename from emp where deptno=20 and job="clerk";
+
+--table scan
+  --(forcing index)
+    --use index
+      --force index
+        --ignore index
+
+explain format=tree select * from emp force index(FK_DEPTNO) where deptno=20 and job="clerk";
+
+--- invisible index ---
+
+ALTER TABLE emp alter index fk_deptno invisible;
+
+explain format=tree select * from check_extent;
+
+explain format=tree select ename from check_extent where deptno=20 and job="clerk";
+
+explain  select * from check_extent;
+
+--visible
+
+ALTER TABLE emp alter index fk_deptno visible;
+
+
+--to check whether index is visible or not
+
+show indexes from emp;
+
+select index_name,is_visible from information_schema.statistics where table_schema="ram_db" and table_name="emp";
+
+
+
+---composite index 
+
+select * from emp;
+
+create index job_deptno_idx on emp(job,deptno);
+ALTER TABLE emp alter index job_deptno_idx visible;
+
+explain select ename from emp where deptno=20 and job="clerk";
+explain format=tree select ename from emp where deptno=20 and job="clerk";
+
+
+
+explain format=tree select * from fruit where id=101;
+
+explain  select * from fruit where id=101;
+
+desc fruit;
+
+alter table fruit add constraint PK_fruit primary key(id);
+
+
+
+-------------------Range partitioning---
+
+--most companies use this type of partitioning
+
+
+
+CREATE TABLE RANGE_PART(emp_no int,
+                        ename varchar(20),
+                        sal int)
+PARTITION BY RANGE(sal)
+(
+  PARTITION P_1000 VALUES LESS THAN (1000),
+  PARTITION P_2000 VALUES LESS THAN (2000),
+  PARTITION P_3000 VALUES LESS THAN (3000),
+  PARTITION P_4000 VALUES LESS THAN (4000),
+  PARTITION P_5000 VALUES LESS THAN (5000),
+  PARTITION P_6000 VALUES LESS THAN (6000)
+);
+INSERT INTO RANGE_PART SELECT empno,ename,sal from check_extent;
+
+select min(sal),max(sal) from RANGE_PART partition (P_1000);
+
+explain select ename from range_part where sal between 2000 and 3000;
+
+explain select ename from range_part where sal<1000;
+
+select distinct year(hiredate) from emp;
+CREATE TABLE RANGE_PART_hiredate(emp_no int,
+                        ename varchar(20),
+                        hiredate date)
+PARTITION BY RANGE(year(hiredate))
+(
+  PARTITION P_1980 VALUES LESS THAN (1981),
+  PARTITION P_1981 VALUES LESS THAN (1982),
+  PARTITION P_1982 VALUES LESS THAN (1983),
+  PARTITION P_1987 VALUES LESS THAN (1988)
+  
+);
+INSERT INTO RANGE_PART_hiredate SELECT empno,ename,hiredate from check_extent;
+desc RANGE_PART_hiredate;
+
+DROP TABLE RANGE_PART_hiredate;
+
+
+explain select emp_no,year(hiredate) from RANGE_PART_hiredate where year(hiredate) between 1981 and 1982;
+
+select min(year(hiredate)),max(year(hiredate)) from RANGE_PART_hiredate partition (P_1987);
+
+EXPLAIN SELECT * FROM RANGE_PART_hiredate
+WHERE hiredate BETWEEN DATE_FORMAT("1984-00-00", "%Y-%m-%d") AND DATE_FORMAT("1987-00-00", "%Y-%m-%d");
+desc RANGE_PART_hiredate;
+
+
+
+------------hash partition -------
+
+create table hash_emp
+(
+  empno int primary key,
+  ename varchar(20),
+  sal float(11,2))
+  partition by hash(empno)
+  partitions 4;
+
+desc check_extent;
+
+
+
+INSERT INTO hash_emp  select empno,ename,sal from check_extent;
+
+select partition_name,partition_ordinal_position, table_rows from information_schema.partitions where table_name="hash_emp";
+
+select * from hash_emp partition(p0) limit 10;
+
+
+
+---------------------temporary tables-----------
+---data is available only for a session duration
+
+CREATE temporary table temp_1(sal float);
+
+INSERT INTO temp_1 select sal from emp;
+
+select * from temp_1;
+
+show tables;
+
+DROP TABLE check_extent;
+DROP TABLE hash_emp;
+
+DROP TABLE RANGE_PART_hiredate;
+
+DROP TABLE range_part;
+
 
 
 
