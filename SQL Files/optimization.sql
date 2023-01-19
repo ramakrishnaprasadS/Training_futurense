@@ -216,6 +216,9 @@ ALTER TABLE emp alter index fk_deptno visible;
 
 show indexes from emp;
 
+
+
+
 select index_name,is_visible from information_schema.statistics where table_schema="ram_db" and table_name="emp";
 
 
@@ -225,7 +228,13 @@ select index_name,is_visible from information_schema.statistics where table_sche
 select * from emp;
 
 create index job_deptno_idx on emp(job,deptno);
-ALTER TABLE emp alter index job_deptno_idx visible;
+ALTER TABLE emp alter index job_deptno_idx invisible;
+
+DESC emp;
+
+ALTER TABLE emp DROP index job_deptno_idx;
+
+
 
 explain select ename from emp where deptno=20 and job="clerk";
 explain format=tree select ename from emp where deptno=20 and job="clerk";
@@ -335,6 +344,167 @@ DROP TABLE hash_emp;
 DROP TABLE RANGE_PART_hiredate;
 
 DROP TABLE range_part;
+
+
+-----------------------------------------
+
+------------------explain
+
+---------type
+  --null
+  --ref     -- non unique index
+  --const  -- primary key/unique
+  --index_merge --where clause columns having individual indexes
+  --system
+  --all  -- 
+  --range -- 
+
+explain select * from emp where comm is null;
+explain select * from emp where comm is null;
+
+create index comm_idx on emp(comm);
+
+explain select * from emp where comm is null;
+explain select * from emp where comm is not null;
+
+show indexes from emp;
+
+explain select * from emp where deptno=20;
+
+explain select * from emp where job="clerk";
+
+
+---whenever there is composite index we cannot force index on leading COLUMNS
+
+
+select * from sys.schema_unused_indexes;
+
+explain select * from emp where empno>7839;  --type: range
+
+explain select * from emp where empno like '75%';  --type:all
+
+-----aggregate
+
+explain format=tree select min(sal) from emp;
+
+create index sal_idx on emp(sal);
+
+
+explain format=tree select min(sal),job from emp group by job;
+
+select * from emp;
+
+explain format=tree select min(sal),job from emp group by job having job<>'analyst';
+
+explain format=tree select min(sal),job from emp where job<>'analyst' group by job;
+
+insert into check_extent(empno) values(1);
+
+select * from check_extent;
+
+
+
+INSERT INTO check_extent select * from  check_extent;
+
+explain format=tree select count(*),job from check_extent  where job="clerk" group by job;
+
+
+
+explain format=tree select count(*),job from check_extent  group by job having job="clerk";
+
+
+CREATE table student_1
+(
+  student_id integer(4) PRIMARY KEY,
+  student_name varchar(15),
+  result char(1) check(result IN ("P","F"))
+);
+
+select * from emp1;
+
+use hr_db;
+select * from employees;
+
+--a
+INSERT INTO student_1(student_id,student_name) select employee_id,first_name from employees;
+
+--b
+
+UPDATE student_1 set result= case 
+when student_name like "%s%" then "P"
+else "F"
+end;
+
+--c
+
+select count(*) as cnt, result from student_1 group by result;
+
+explain format=tree select count(*) as cnt, result from student_1 group by result;
+explain format=tree select count(student_id) as cnt, result from student_1 group by result;
+
+create index pr_indx on student_1(student_id);
+
+show indexes from student_1;
+
+ALTER TABLE student_1 ALTER index pr_indx invisible;
+
+create index res_indx on student_1(result); 
+
+ALTER TABLE student_1 ALTER index res_indx invisible;
+
+use hr_db;
+
+
+
+explain format= tree select sum(salary),job_id from employees group by job_id with rollup;  --lest cost
+
+explain format= tree select sum(salary),job_id from employees group by job_id
+union 
+select sum(salary),null from employees; --more cost
+
+
+show tables;
+
+create table country1 as select * from countries;
+
+create table region1 as select * from regions;
+
+explain format=tree select region_name,country_name from region1 natural join country1;
+explain format=tree select region_name,country_name from regions natural join countries;
+
+create index regcomp_idx on regions(region_id,region_name);
+
+
+
+explain format=tree select region_name,country_name from region1 join country1 using(region_id);
+
+create index creg_id_idx on country1(region_id);
+
+--optimizer join
+----hash join   --> whenever there are no indexes on tables to be joined
+----nested loop join --> when there are indes this occurs
+
+create index reg1_id_indx on region1(region_id);
+
+ALTER TABLE region1 ADD constraint pk_regid primary key(region_id);
+
+ALTER TABLE country1 ADD constraint fk_regid foreign key(region_id) references region1(region_id);
+
+
+show indexes from region1;
+
+explain format=tree select region_name,country_name from region1 force index(reg1_id_indx) natural join country1;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
