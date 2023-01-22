@@ -155,6 +155,8 @@ select TRUNCATE(157.258,-2); --  100
 
 select TRUNCATE(157.258,-1);  --  150
 
+select TRUNCATE(157.58,1);
+
 --CEIL and FLOOR 
 
 select floor(157.258);  --157

@@ -20,6 +20,9 @@ DROP PROCEDURE getFirsttwocountries;
 
 SHOW PROCEDURE STATUS LIKE "getFirsttwocountries";
 
+use ram_db;
+show procedure status;
+
 --show procedure status;  -->gives all procedures in that database
 
 --stored procedures are asssociated with the respective databases
@@ -35,8 +38,27 @@ CALL getFirsttwocountries();
 -----IN
 
 DELIMITER //
+use hr_db;
 
 select * from countries;
+
+select length(country_name)/2 from countries;
+
+
+
+select substr(country_name,round(length(country_name)/2),1) as code from countries;
+select  CONCAT(substr(country_name,1,1),substr(country_name,length(country_name)/3,1),substr(country_name,length(country_name)/2,1)) as code from country;
+create table cntr
+(
+    country_code char(5) PRIMARY KEY,
+    country_name varchar(50)
+);
+
+create PROCEDURE getcountry_codes()
+BEGIN 
+    insert into cntr(country_code,country_name) select CONCAT(substr(country_name,1,1),substr(country_name,length(country_name)/3,1),substr(country_name,length(country_name)/2,1)),country_name from countries;
+
+END//
 
 CREATE PROCEDURE getOfficebyCountry(IN countryName VARCHAR(255))
 BEGIN 
@@ -46,11 +68,19 @@ END//
 
 DELIMITER ;
 
+use flightsdb;
+show tables;
+select * from country;
+
 DROP PROCEDURE getOfficebyCountry;
 
 CALL getOfficebyCountry("UK");
 
 ----OUT
+
+show procedure status where db="ram_db";
+
+show tables from hr_db;
 
 DELIMITER //
 CREATE PROCEDURE getOrderCountByStatus(
@@ -82,11 +112,12 @@ BEGIN
         SET counter = counter + step;
 END //
 DELIMITER ;
-SET @myCounter = 1;
+SET @myCounter = 2;
 CALL setCounter(@myCounter, 2);
 CALL setCounter(@myCounter, 3);
 CALL setCounter(@myCounter, 4);
 SELECT @myCounter;
+
 
 
 

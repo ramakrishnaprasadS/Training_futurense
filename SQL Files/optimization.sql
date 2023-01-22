@@ -271,9 +271,9 @@ PARTITION BY RANGE(sal)
 );
 INSERT INTO RANGE_PART SELECT empno,ename,sal from check_extent;
 
-select min(sal),max(sal) from RANGE_PART partition (P_1000);
+select min(sal),max(sal) from RANGE_PART partition (P_2000);
 
-explain select ename from range_part where sal between 2000 and 3000;
+explain format=tree select ename from range_part where sal between 2000 and 2999;
 
 explain select ename from range_part where sal<1000;
 
@@ -301,6 +301,7 @@ select min(year(hiredate)),max(year(hiredate)) from RANGE_PART_hiredate partitio
 
 EXPLAIN SELECT * FROM RANGE_PART_hiredate
 WHERE hiredate BETWEEN DATE_FORMAT("1984-00-00", "%Y-%m-%d") AND DATE_FORMAT("1987-00-00", "%Y-%m-%d");
+
 desc RANGE_PART_hiredate;
 
 
@@ -456,7 +457,7 @@ use hr_db;
 
 
 
-explain format= tree select sum(salary),job_id from employees group by job_id with rollup;  --lest cost
+explai format=tree select sum(salary),job_id from employees group by job_id with rollup;  --lest cost
 
 explain format= tree select sum(salary),job_id from employees group by job_id
 union 
@@ -494,6 +495,190 @@ ALTER TABLE country1 ADD constraint fk_regid foreign key(region_id) references r
 show indexes from region1;
 
 explain format=tree select region_name,country_name from region1 force index(reg1_id_indx) natural join country1;
+
+
+---------------------------------COMPOSITE PARTITION-------------------
+
+---main partition should be list/range
+--subpatrition hash
+--AND operator
+
+use ram_db;
+show tables;
+select count(*) from check_extent;
+
+create table comp_range_hash
+(
+  empno int,
+  ename varchar(20),
+  sal int,
+  job varchar(20)
+)
+PARTITION BY range(sal)
+subpartition by hash(empno)
+subpartitions 2
+(
+  partition P_1k values less than (1000),
+  partition P_2k values less than (2000),
+  partition P_3k values less than (3000),
+  partition P_4k values less than (4000),
+  partition P_MAX values less than MAXVALUE
+);
+
+insert into comp_range_hash select empno,ename,sal,job from check_extent;
+
+SELECT 
+partition_name,
+table_rows,
+subpartition_name
+from information_schema.partitions
+where table_name="comp_range_hash";
+
+select * from comp_range_hash partition(p_2k);
+
+explain  select * from emp where sal in (select min(sal) from emp);
+explain format=tree select * from emp where sal in (select min(sal) from emp);
+
+explain format=tree select * from emp where sal IN (select min(sal) from emp );
+
+explain format=tree select * from emp where sal = (select min(sal) from emp ); --cost is reduced compared to IN
+
+show indexes from emp;
+
+explain format=tree select ename,sal,deptno from emp e where sal>(select avg(sal) from emp where deptno=e.deptno);  --less cost than cte
+
+explain format=tree with ct as (select deptno,avg(sal) as avg_sal from emp group by deptno)
+select e.ename,e.sal,e.deptno from emp e inner join 
+ct on e.deptno=ct.deptno where e.sal>ct.avg_sal;
+
+
+select d.deptno,d.dname from dept d where not exists ( select 1 from emp e where e.deptno = d.deptno);
+
+explain format=tree select d.deptno,d.dname from dept d where not exists ( select 1 from emp e where e.deptno = d.deptno);
+
+explain format=tree select deptno,dname from dept where deptno not in (select deptno from emp);  --cost is less compared to  not exists
+
+use ram_db;
+
+show create table emp;
+
+show indexes from emp;
+
+CREATE index hiredate_idx on emp(hiredate);
+
+------------Functional index
+
+explain format=tree select * from emp where monthname(hiredate)="January"; --even there is index on hiredate it is not applied for functions on it
+
+explain format=tree select * from emp where hiredate="1981-12-01"; 
+
+ALTER TABLE emp ADD index((monthname(hiredate)));
+
+explain format=tree select * from emp where monthname(hiredate)="January";
+
+show indexes from emp;
+
+create index ename_idx on emp(ename);
+
+explain format=tree select * from emp where ename = "turner";
+
+explain format=tree select * from emp where year(hiredate)=1981;
+
+ALTER TABLE emp ADD index((year(hiredate)));
+
+explain format=tree select * from emp where year(hiredate)=1981;
+
+----------------hash indexes
+
+use hr_db;
+
+create table testhash
+(
+  fname varchar(50) not null,
+  lname varchar(50) not null,
+  key using hash(fname)
+) engine=memory;
+
+insert into testhash select first_name,last_name from hr_db.employees where department_id in (60,90);
+
+select * from testhash;
+
+explain format=tree select * from testhash where fname="Alexander";
+
+
+----------fulltext index
+
+create table full_t as select first_name,last_name from hr_db.employees;
+
+select * from full_t;
+desc full_t;
+desc employees;
+
+drop table full_t;
+
+alter table full_t add fulltext(first_name,last_name);
+
+explain format=tree select * from full_t where match(first_name,last_name) AGAINST ("Alexander%");
+
+
+
+--print the list of employees displaying "good salary" if sal>3000, "Average salary" if sal=3000 and "Poor salary" if sal<3000.
+select * from employees;
+show indexes from employees;
+
+explain format=tree select first_name,
+salary,
+case 
+  when salary = 3000 then "Average salary"
+  when salary>3000 then "good salary"
+  else "poor salary"
+end
+from employees;
+
+explain format=tree select first_name,
+salary,
+if(salary>3000,"goodsalary","poor salary") as cmt
+from employees;
+
+use ram_db;
+select * from emp;
+show indexes from emp;
+
+explain format=tree select ename,sal, sal*1.5 as newsal from emp;
+
+explain format=tree select ename,sal, sal*1.5 as newsal from emp where (sal*1.5)>3000;
+
+explain format=tree select ename,sal, sal*1.5 as newsal from emp where sal>3000/1.5; --now indexed column  is utilized
+
+
+----------------profiler
+
+select @@profiling;
+set profiling=0;
+
+select @@profiling;
+
+use hr_db;
+
+use ram_db;
+select * from regions;
+select * from check_extent;
+
+select * from comp_range_hash where sal=3000;
+show profiles;
+
+show profile for query 11;
+
+
+
+
+
+
+
+
+
+
+
 
 
 
