@@ -13,6 +13,15 @@
 --1.a charcter functions
 --   CONCAT(col1,"",col2,...)
 
+--Find the country that has all the vowels and no spaces in its name.
+select name from world 
+where 
+(name REGEXP '[a]' AND name REGEXP '[e]' AND name REGEXP '[i]' AND name REGEXP '[o]' AND name REGEXP '[u]') AND name NOT LIKE '% %';
+
+
+--Find the capital and the name where the capital includes the name of the country.
+
+select capital,name from world where capital LIKE CONCAT('%', name, '%') ;
 
 select CONCAT(ename,"\'s  job is ",job) AS "emp and his job" from emp;
 
@@ -115,6 +124,7 @@ select empno from emp  where MOD(empno,2)=1 ;
 /* A=B 0
    A>B 1
    A<B -1  */
+
 
 
 set @v1=10,@v2=30,@v3=10;

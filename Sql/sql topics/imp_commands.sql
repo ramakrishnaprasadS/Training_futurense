@@ -146,6 +146,13 @@ timestampdiff(month,'2020-08-12',curdate())
 %y 2 digit year 9
 */
 
+nvl(exp1,0)--->if exp1 is null replace it with 0
+
+nvl2(exp1,exp2,exp3)
+
+coalesce(exp1,exp2,exp3)
+
+
 
 
 
