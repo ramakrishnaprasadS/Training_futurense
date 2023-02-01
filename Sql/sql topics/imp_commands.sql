@@ -93,9 +93,9 @@ ALTER TABLE
 */
 
 --
-> SELECT CONSTRAINT_NAME, TABLE_NAME, CONSTRAINT_TYPE 
- -> FROM information_schema.TABLE_CONSTRAINTS 
- -> WHERE TABLE_NAME = 'TEST1'; 
+SELECT CONSTRAINT_NAME, TABLE_NAME, CONSTRAINT_TYPE 
+FROM information_schema.TABLE_CONSTRAINTS 
+WHERE TABLE_NAME = 'TEST1'; 
 
 set foreign_key_checks=0;
 
@@ -145,6 +145,8 @@ timestampdiff(month,'2020-08-12',curdate())
 %D DAY NUMBER WITH th,rd etc 13TH
 %y 2 digit year 9
 */
+
+select str_to_date("10-may-2022","%d-%M-%Y"); --2022-05-10
 
 nvl(exp1,0)--->if exp1 is null replace it with 0
 

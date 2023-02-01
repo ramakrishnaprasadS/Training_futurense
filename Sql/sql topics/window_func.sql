@@ -1,4 +1,5 @@
 
+---diff b/w windows and analytical functions?
 /*
 
 OLAP --online analytical processing
