@@ -1,0 +1,26 @@
+OS
+    shell
+        kernel
+Hardware
+
+os-
+
+shell - interface between user and kernel,interprets the user commands and sends to kernel
+
+kernel-interacts with underlying hardware ,by converting the inputs from shell to machine code
+
+--distribution to distribution has some changes in kernel and shells
+--shell scripts should be written specific to shell based on the shell specific syntax
+--different types fo shells:
+            1.Bourne shell(sh) -- standard ,available mostly
+            2.C shell(csh)
+            3.Bash             -- advanced ,supports more commands
+            4.Posix shell
+            5.KornShell(ksh)
+--different OS in linux
+    ubuntu
+    Cent OS
+    Debian
+    RedHat
+    Fedora
+    

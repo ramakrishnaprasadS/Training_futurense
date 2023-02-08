@@ -1,0 +1,127 @@
+
+Joins: A join combines rows from two or more tables based on a related column between them. 
+      The result is a single table that includes columns from all the joined tables. 
+      There are several types of joins (e.g. inner join, left join, right join, etc.).
+
+Subqueries: A subquery is a query within another query. 
+            The result of a innerquery is used as an input to the main query.
+            Subqueries are used to retrieve data from one table based on data from another table. 
+
+            types:
+
+            Scalar subquery: Returns a single value from one column of one row from the inner query.
+
+            Column subquery: Returns one or more columns from the inner query.
+
+            Row subquery: Returns one or more rows from the inner query.
+
+            Correlated subquery: A subquery that depends on the outer query and references a column from the outer query in its WHERE clause.
+
+            Nested subquery: A subquery that is nested inside another subquery.
+
+            Exists subquery: A subquery that returns a Boolean value indicating whether the inner query returns any rows.
+
+            Not exists subquery: A subquery that returns a Boolean value indicating whether the inner query does not return any rows.
+
+
+
+
+
+Common Table Expressions (CTEs): A CTE is a temporary result set that is defined 
+                                within the context of a SELECT, INSERT, UPDATE, DELETE, or CREATE VIEW statement.
+                                 A CTE can be thought of as a named subquery that can be used within a larger query. 
+                                 Unlike subqueries, CTEs can be referenced multiple times within the main query and 
+                                 can improve readability and maintainability of complex queries.
+
+In summary, joins are used to combine rows from multiple tables, 
+subqueries are used to retrieve data from one table based on data from another table, 
+and CTEs are used to simplify complex queries by creating a named temporary result set that can be referenced multiple times 
+within the main query.
+
+
+use of window functions: Window functions operate on a set of rows, known as a "window", which is defined by an OVER clause. 
+                        The size and contents of the window can be specified using the ROWS or RANGE clause. 
+                        For example, you can calculate a running total over the previous 10 rows in a result set.
+
+                        In the cases where we need to perform some calculations across multiple rows within a result set,
+                        we can use these window functions,without the need to use complex self-joins or subqueries.
+
+        ROW_NUMBER(): assigns a unique number to each row within a result set.
+
+        RANK(): assigns a rank to each row within a result set, with the same rank assigned to rows with the same values.
+
+        DENSE_RANK(): assigns a rank to each row within a result set, with the same rank assigned to rows with the same values and the next rank assigned to the next distinct value.
+
+        NTILE(): divides the result set into a specified number of groups and assigns a group number to each row.
+
+        SUM(): calculates the sum of values within a specified window.
+
+        AVG(): calculates the average of values within a specified window.
+
+        MIN(): returns the minimum value within a specified window.
+
+        MAX(): returns the maximum value within a specified window.
+
+        COUNT(): returns the number of rows within a specified window.
+
+        LEAD(): returns the value of the specified expression for the next row within a specified window.
+
+        LAG(): returns the value of the specified expression for the previous row within a specified window.
+
+
+stored functions: Stored functions in SQL are pre-compiled, reusable units of SQL code that can be used to perform specific actions and return values. 
+                  They are similar to regular SQL functions, but with the added benefit of being stored within the database, 
+                  making them available to multiple applications and users.
+                  -must and should return single value
+                  -return statement is a must
+                  -can be used with sql statements directly
+
+built-in functions: 
+
+        String functions: Examples include CONCAT, SUBSTR, UPPER, LOWER, etc.
+
+        Date and time functions:   Examples include NOW, CURDATE, CURTIME, DATE_ADD, etc.
+
+        Numeric functions: Examples include ROUND, ABS, CEILING, FLOOR, etc.
+
+        Aggregate functions: Examples include SUM, AVG, COUNT, MIN, MAX, etc.
+
+        Conversion functions:  Examples include CAST, CONVERT, TO_CHAR, TO_DATE, etc.
+
+        Conditional functions: These functions perform different operations based on a specified condition. Examples include CASE, COALESCE, ISNULL, NULLIF, etc.
+
+        Miscellaneous functions: These functions perform various other operations, such as generating random numbers, calculating checksums, etc. Examples include RAND, CHECKSUM, UUID, etc.
+
+        Note: The availability and exact syntax of these functions may vary between different database management systems (DBMS).
+
+stored routines: user defined precompiled block of sql codes that is stored on the database server and can be executed repeatedly by multiple users.
+                 They allow for the encapsulation of complex business logic and can improve the performance, maintainability, and security of an application.
+
+                Stored routines can take input parameters, perform a set of operations, and may return output parameters or a result set. 
+                They can be written in SQL or a procedural language, such as PL/SQL or T-SQL, 
+                depending on the SQL implementation and database management system being used.
+                - cant be used directly with sql statements.
+
+triggers:     SQL triggers are special types of stored procedures that are automatically executed or triggered in response to 
+             specific events, such as the insertion, update, or deletion of data in a table. 
+             Triggers are used to enforce data integrity, maintain consistency, and enforce business rules at the database level.
+
+sql views:  A view in SQL is a virtual table that is based on the result of a SELECT statement. 
+            A view does not store data itself, but instead provides a way to access data stored in one or more tables. 
+
+            Once a view is created, it can be used in the same way as a table in SELECT, UPDATE, DELETE, and other SQL statements. 
+            The data in a view is always up-to-date with the data in the underlying tables.
+
+temporary tables: A temporary table in SQL is a table that exists only for the duration of a single database session. 
+                 Temporary tables are used to store intermediate results for complex queries or to store 
+                 temporary data for use in multiple statements within a single session. 
+
+
+
+
+
+
+
+
+
+

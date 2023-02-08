@@ -1,14 +1,14 @@
 filename1="C:\\Users\\miles\\Documents\\GitHub\\Training_futurense\\Python\\file1.txt"
 filename2="C:\\Users\\miles\\Documents\\GitHub\\Training_futurense\\Python\\file2.txt"
 try:
-    f=open(filename1,'r')
-    d=f.readlines()
-    #final_list=list(map(,d))
-    #print(final_list)
-    #a=4/0
-    #f.write("new file with new contents")
-    #f.write("existing file  contents added to existing content r+")
-    f.close()
+    f=open(filename1,'r+')
+    print("before reading : ",f.tell())
+    print(f.read())
+    print("after reading : ",f.tell())
+    f.write("koti")
+    print("after writing : ",f.tell())
+    print(f.read())
+    
 except FileNotFoundError as fnf:
     print("the file \n"+filename1+"  \nis not available")
     try:
