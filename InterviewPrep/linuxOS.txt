@@ -14,7 +14,7 @@ kernel-interacts with underlying hardware ,by converting the inputs from shell t
 --different types fo shells:
             1.Bourne shell(sh) -- standard ,available mostly
             2.C shell(csh)
-            3.Bash             -- advanced ,supports more commands
+            3.Bash             -- advanced ,supports more commands...(default for ubuntu)
             4.Posix shell
             5.KornShell(ksh)
 --different OS in linux
@@ -23,4 +23,84 @@ kernel-interacts with underlying hardware ,by converting the inputs from shell t
     Debian
     RedHat
     Fedora
+
+-- through terminal....we can check telnet public_ip_address -->and can check its connectivity
+
+
+
+windows file system
+    drive-->folder-->files
+    D:\\python\file1.py
+
+linux file system
+    root(/)-->home-->ubuntu-->directory-->files
+
+--Any application installed will be in /user or /opt directories in the root directory....
+
+--whoami                    --> gives the current user
+--date                      -->gives current date
+--pwd                       -->present working directory
+--cd dir_path               -->goes to required directory
+--cd ..                     -->move back by one directory
+--cd /                      -->move  to root directory
+--cd ~                      -->move to home directory
+--man command_name          -->gives manual for the given command
+--clear                     -->clears the screen
+--ls -l                     -->list the file details in the given directory with permissions line wise
+--ls -la                    --> shows hidden files also
+--cat file_name             --> views the contents of given file....if no files ...creates new one ...
+([dir/file][owner][group][other])
+(    d       rwx    rwx     rwx )
+(            421    421     421)
+
+--mkdir dir_name            -->create new dir
+--touch file_name           -->create a file
+
+-------editing files
+--vi editor
+--vim editor
+--nano editor
+
+--vi file_name -->to edit the file
+        --press i to insert
+        --insert data
+        --esc 
+        --shift+:wq  -->to save changes and quit
+        --shift+:q   -->to quit without saving changes
+--cp source_file_path destination_file_path     -->copy source file in destination file
+--mv source_file_path destination_file_path -->moves source file to destination 
+--rm file_name -->delete the file
+--rmdir -r dir_path -->deletes directory along with contents in it
+--cp *.txt dir_path --> copies all .txt files to specified directory  ( *  is the wild card character)
+--cp dir1/* .                 -->copies all files in dir1 to the current location
+
+--permisssions
+
+--chmod +x file_name --> gives execute permissions to all
+--chmod -x file_name -->  revoke execute permissions to all
+--chmod 777 filename
+
+--history -->gives history of commands of that session
+-- !command_number --> to execute a command from history
+--sudo command_name    --> to run a command as root user
+--head -n file_name --> gives top n lines in file
+--ps -->gives the current processes running
+--ps -f --> gives full details of current running processes
+--ps -ef --> gives excutable file details for running processes for all users
+--kill processid --> kills the process
+--apt -->package manager for ubuntu--->to install applications in ubuntu
+--sudo apt-get update  --> for updating the packages
+
+-- whereis packagename -->gives path where that package
+-- sudo ln -s link_name filename_to_be_linked -->creates a shortcut link
+--env -->gives list of all environment variables
+--echo $SHELL  -->gives the shell we are using  
+--echo $PATH  -->gives value of the env variable PATH
+ 
+
+
+
+
+
+
     
