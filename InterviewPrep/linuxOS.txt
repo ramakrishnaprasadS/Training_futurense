@@ -38,6 +38,8 @@ linux file system
 --Any application installed will be in /user or /opt directories in the root directory....
 
 --whoami                    --> gives the current user
+--who                     -->       gives the current user along with date
+--users -->               --> lists all users
 --date                      -->gives current date
 --pwd                       -->present working directory
 --cd dir_path               -->goes to required directory
@@ -51,12 +53,10 @@ linux file system
 --cat file_name             --> views the contents of given file....if no files ...creates new one ...
 ([dir/file][owner][group][other])
 (    d       rwx    rwx     rwx )
-(            421    421     421)
-
+(            421    421     421 )
 --mkdir dir_name            -->create new dir
---touch file_name           -->create a file
-
--------editing files
+--touch file_name           -->create a file 
+--------------------editing files
 --vi editor
 --vim editor
 --nano editor
@@ -67,23 +67,29 @@ linux file system
         --esc 
         --shift+:wq  -->to save changes and quit
         --shift+:q   -->to quit without saving changes
+        --dd -->deletes the current row
+        --yy  -->
 --cp source_file_path destination_file_path     -->copy source file in destination file
 --mv source_file_path destination_file_path -->moves source file to destination 
 --rm file_name -->delete the file
 --rmdir -r dir_path -->deletes directory along with contents in it
---cp *.txt dir_path --> copies all .txt files to specified directory  ( *  is the wild card character)
+--cp *.txt dir_path --> copies all .txt files to specified directory  ( *  is the wild card character for multiple chars)
+        ( ?  is the wild card character for single chars)
 --cp dir1/* .                 -->copies all files in dir1 to the current location
 
 --permisssions
 
 --chmod +x file_name --> gives execute permissions to all
 --chmod -x file_name -->  revoke execute permissions to all
+--chmod ugo+rwx     --> add/revoke permission in specific 
 --chmod 777 filename
 
 --history -->gives history of commands of that session
 -- !command_number --> to execute a command from history
 --sudo command_name    --> to run a command as root user
 --head -n file_name --> gives top n lines in file
+--tail -n file_name --> gives buttom n lines in file
+-- !! executes previous command
 --ps -->gives the current processes running
 --ps -f --> gives full details of current running processes
 --ps -ef --> gives excutable file details for running processes for all users
@@ -96,7 +102,92 @@ linux file system
 --env -->gives list of all environment variables
 --echo $SHELL  -->gives the shell we are using  
 --echo $PATH  -->gives value of the env variable PATH
+
+----PIPE( | )
+
+-- ps -f | sort  -->process list gets sorted
+-- ls -l | sort +4  --> sorts the listed op in based on 4th column
+
+--ls -l | grep pattern  --> list files containing that pattern (no wild card chars needed)
  
+--ls -l | grep pattern -i  --> ignores case and shows matched pattern
+--ls -l | grep pattern -v  --> records unmatch with 
+--ls -l | grep pattern -ic  --> ignores case and gives count matched pattern
+--ls -l | grep pattern -iv  --> ignores case and shows unmatched pattern
+--ls -l | grep pattern > out.txt -->overwrites to out.txt
+--ls -l | grep pattern >> out.txt -->appends into out.txt
+
+-- cat cities.txt | grep -i new > newcities.txt   --> contents containing 'new' are selected and send to newcities.txt
+-- grep -i new cities.txt > newcities.txt         --> contents containing 'new' are selected and send to newcities.txt
+--cat cities.txt | grep -i new |sed  's/new/old/gi' > oldcities.txt  -->replacing new with old  ( g means global ->replace all.., s means serach,...i means case insensitive)
+
+
+
+-----------------------------SHELL SCRIPTING-----------------
+
+---#!/bin/sh
+-- executing shell script                           --> sh/bash/ksh filenameor path
+-- executing shell script  as executable            --> ./ filenameor path
+
+--!!! while assignment we should not give spaces before and after equalto sign
+
+-Q1-
+---using script and create dir "assignments" under /home/ubuntu/shell-scripts
+   create file "cities.txt"
+   add city name into file
+   filter city names contain new 
+   replace new with old
+   write the output to "old-cities.txt"
+
+   include loop and conditionals in it ...
+
+--cloning repo into ubuntu
+
+git clone https://github.com/asaravanakumar/futurense_hadoop-pyspark
+
+-------------special varibles
+-- echo "$0" --> filename of script
+--echo "$1"   --->gives first argument
+----echo "$n"   --->gives nth argument
+---echo "$#"  --> gives no of arguments
+---echo "$*"  --->gives all the arguments passed
+---echo "$HOME" -->gives home path
+--echo $@ --->gives all the arguments
+--echo $$ -->process id of the current shell
+--echo $? -->status of last command
+
+-------------arithmetic operators
+-----there should be space before and after operator to work properly
+---`expr $a + $b` 
+---`expr $a \* $b` 
+---[$a == $b] --->checking equality
+---[$a != $b] --->checking not equal
+= and == are for string comparisons
+-eq is for numeric comparisons
+-eq is in the same family as -lt, -le, -gt, -ge, and -ne
+
+
+---tar to untar  and zip and unzip
+
+--tar -czvf filename.tar.gz path1 path2 path3 ...(path1,2,3 are paths of file to be compressed)
+--tar -xzvf filename.tar.gz -C path_fbbb                                                                                                                                                                                                                                          or_extraction
+--zip -r zipfilename.zip path1 path2 path3
+--unzip zipfilefilename.zip -d path_to_unzip
+
+
+
+--crontab
+--crontab -l
+--crontab generator
+--crontab -e   -->to edit
+
+
+
+
+
+
+
+
 
 
 
