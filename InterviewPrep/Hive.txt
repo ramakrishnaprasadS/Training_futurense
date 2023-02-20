@@ -1,0 +1,364 @@
+
+Hive --> developed by Facebook as sql query engine to convert sql query to map reduce program
+
+usecases:
+    analysing processed data
+
+
+--most of sql related things can be implemented using hive
+
+--Hive has hiveserver , and we can connect with hiveserver using python program
+--hive also has UI called hive webui
+--can connect to powerbi and do visualization
+
+
+--Hive is not best suited as transactional database
+--hive has schema on read i,e while accessing data the table definitions are validated
+   --data loading is efficient and fast
+--Hive best suited for hdfs tables,and large volumes of structured data
+
+--Hive tables just provide structure to hdfs data
+
+limitations:
+    - does not support row level updates,deletes.Data can be overwritten or appended
+    - not suitable for oltp systems
+    - no real time processing
+
+Hive components
+    - shell -ui to write queries,...it is a client to connect to hive and execute queries
+    -Metastore - schema of tables is stored , by default derby as metastore, we can also link any rdbms as metastore
+    -driver    -- takes the query from shell and sends it to compiler
+    -compiler -parses sql query and translates into mr program and prpares execution plan by collaborating with metastore
+    -execution engine --submits mr job to hadoop cluster, then map reduce job runs and sends the output to driver
+
+--the data in the hive tables is stored at hdfs
+
+
+Hive datatypes:
+    supports almost all sql datatypes
+    -Structs: useful to store multiple fileds an object (like different fields in address) ---(.) notation is used to access
+    -Maps: can store key value pairs
+    -Arrays: list of values can be stored.---[n] is used to access..where n is index
+
+
+    datamodel
+        database/schema
+            table
+                rows & columns
+                    partitons
+                        buckets | clusters
+
+
+
+
+
+!ls  ---> to run linux commands in hive shell
+dfs -ls / -->to run linux commands and hdfs commands in hive shell
+
+dfs -cat /user/hive/warehouse/db1.db/employee/000000_0; -->to view contents of the table
+
+dfs -rm /user/hive/warehouse/db1.db/employee/000000_0;
+
+ desc formatted employee;  --> gives complete details of table
+
+
+ ---Hive shell is outdated and not recomended to work on hive
+
+
+ ----------------Beeline Shell -------
+
+ beeline
+  !connect jdbc:hive2:// username password org.apache.hive.jdbc.HiveDriver    --> #Connect without Hive Server
+
+
+  beeline
+  !connect jdbc:hive2:// username password org.apache.hive.jdbc.HiveDriver  -->conneting to embedded hive server 
+
+ !connect jdbc:hive2://localhost:10000 username password org.apache.hive.jdbc.HiveDriver -->connecting to hive server running in 10000 port of local host
+
+
+Hive Managed Tables
+    by default we create managed or internal tables in hive
+    if we drop we lose meta data as well as data
+
+
+    # Create managed table
+    CREATE TABLE IF NOT EXISTS EMPLOYEE (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE;
+
+    # Describe table
+    DESCRIBE EMPLOYEE;
+
+    # Describe table with more details
+    DESCRIBE FORMATTED EMPLOYEE;
+
+    # Load Data into managed table
+    LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee.txt' OVERWRITE INTO TABLE EMPLOYEE;
+------------------
+    CREATE TABLE IF NOT EXISTS RATINGS (userid int, movieid int, rating float,timestmp date )
+    COMMENT 'Movie ratings'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE;
+
+    LOAD DATA LOCAL INPATH '/mnt/c/Users/miles/Downloads/movielens/ratings.csv' OVERWRITE INTO TABLE ratings;
+
+
+
+External Table:
+    -created using "external" keyword
+    -hive just owns metadata,and not actual data of external table
+    -when 
+    -
+
+
+    # Create external table
+    CREATE EXTERNAL TABLE IF NOT EXISTS EMPLOYEE_EXT (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    LOCATION '/user/training/empmgmt/input';
+
+/temp/hive/_resultcache_ --> to see query result files of hivw in hdfs ---> it temporary hive workspace in hdfs
+
+        CREATE TABLE my_table(a string, b string, ...)
+        ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+        WITH SERDEPROPERTIES (
+        "separatorChar" = "\t",
+        "quoteChar"     = "'",
+        "escapeChar"    = "\\"
+        )  
+        STORED AS TEXTFILE;
+        Default properties for SerDe is Comma-Separated (CSV) file
+        
+        DEFAULT_ESCAPE_CHARACTER \
+        DEFAULT_QUOTE_CHARACTER  "
+        DEFAULT_SEPARATOR        ,
+        This SerDe works for most CSV data, but does not handle embedded newlines. To use the SerDe, specify the fully qualified class name org.apache.hadoop.hive.serde2.OpenCSVSerde.  
+
+
+
+Partition table: --tables with huge records are made into partitions based on a column or column ,so that querying becomes easy
+    # Create partition table
+    CREATE TABLE IF NOT EXISTS EMPLOYEE_PART (eid int, name String, salary String, designation String)
+    COMMENT 'EMPLOYEE_PART details'
+    PARTITIONED BY (yoj String)
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE;
+
+    # Insert data into partition table
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (100, 'Kumar', 50000, 'Admin', '2020');
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (101, 'Anil', 60000, 'Technical lead', '2019');
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (102, 'Arvind', 70000, 'Developer', '2020');
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (103, 'Santhosh', 80000, 'Analyst', '2019');
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (104, 'Satya', 40000, 'Manager', '2020');
+    INSERT INTO TABLE EMPLOYEE_PART (eid, name, salary, designation, yoj) VALUES (106, 'Vijay', 30000, 'Admin', '2021');
+
+
+Bucketed/clustered Table: In each partiton ,records of specified condition(key) will be grouped in one bucket 
+
+    # Create cluster table
+    CREATE TABLE IF NOT EXISTS EMPLOYEE_CLUS (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    PARTITIONED BY (yoj String) CLUSTERED BY (eid) INTO 3 BUCKETS
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS TEXTFILE;
+
+    # Insert data into partition table
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (100, 'Kumar', 50000, 'Admin', '2020');
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (101, 'Anil', 60000, 'Technical lead', '2019');
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (102, 'Arvind', 70000, 'Developer', '2020');
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (103, 'Santhosh', 80000, 'Analyst', '2019');
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (104, 'Satya', 40000, 'Manager', '2020');
+    INSERT INTO TABLE EMPLOYEE_CLUS (eid, name, salary, designation, yoj) VALUES (106, 'Vijay', 30000, 'Admin', '2021');
+
+    #query
+    SELECT * FROM EMPLOYEE_CLUS TABLESAMPLE(BUCKET 2 OUT OF 3);
+
+
+    -----------------------------
+    sql data is case insensitive
+    hive data is case sensitive
+
+# Create table with complex data types
+
+CREATE TABLE IF NOT EXISTS EMPLOYEE_COMP ( eid int, name String, salary double, designation String, contact array<string>, address MAP<string, string>, dept STRUCT<name:string,bu:string>)
+COMMENT 'Employee details'
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+COLLECTION ITEMS TERMINATED BY '$'
+MAP KEYS TERMINATED BY '#'
+STORED AS TEXTFILE;
+
+# Load data
+LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee-comp.txt' OVERWRITE INTO TABLE EMPLOYEE_COMP;
+
+
+# Query Data
+SELECT * FROM EMPLOYEE_COMP;
+
+SELECT name, contact[0] as prim_contact, contact[1] as secondary_contact, contact[2]  as alternate_contact FROM EMPLOYEE_COMP;
+
+SELECT name, contact[0], address['home'], address['office'], dept.name, dept.bu FROM EMPLOYEE_COMP;
+
+SELECT name, size(contact), size(address), map_keys(address), map_values(address), array_contains(contact, '8765432345'), sort_array(contact)  FROM EMPLOYEE_COMP;
+
+
+-------------JOINS----
+
+    # Create employee table
+    CREATE EXTERNAL TABLE IF NOT EXISTS employee1 (eid int, name String, age int, gender String, salary double, designation String, department String, country int)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    LINES TERMINATED BY '\n'
+    LOCATION '/user/training/empmgmt/input';
+
+    # Load Data
+    LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee1.txt' OVERWRITE INTO TABLE employee1;
+
+
+    CREATE EXTERNAL TABLE IF NOT EXISTS country (cid int, code String, name String)
+    COMMENT 'Country details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    LOCATION '/user/training/country/input';
+
+    # Load Data
+    LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/country.txt' OVERWRITE INTO TABLE country;
+
+    ## JOIN Queries
+
+    #Inner Join
+    SELECT e.eid, e.name, c.name as country FROM employee1 e JOIN country c ON e.country = c.cid;
+
+    #Full Outer Join
+    SELECT e.eid, e.name, c.name as country FROM employee1 e FULL OUTER JOIN country c ON e.country = c.cid;
+
+    #Left Outer Join
+    SELECT e.eid, e.name, c.name as country FROM employee1 e LEFT OUTER JOIN country c ON e.country = c.cid;
+
+    #Right Outer Join
+    SELECT e.eid, e.name, c.name as country FROM employee1 e RIGHT OUTER JOIN country c ON e.country = c.cid;
+
+
+-------VIEWS----
+
+    ## VIEWs
+    CREATE VIEW empcountry AS SELECT e.eid, e.name, c.name as country FROM employee1 e JOIN country c ON e.country = c.cid;
+
+    SELECT * FROM empcountry;
+
+    ## Materialized VIEWs
+    CREATE MATERIALIZED VIEW empcountry_mat AS SELECT e.eid, e.name, c.name as country FROM employee1 e JOIN country c ON e.country = c.cid;
+
+    SELECT * FROM empcountry_mat;
+
+    # Drop views
+    DROP VIEW IF EXISTS empcountry;
+    DROP VIEW IF EXISTS empcountry_mat;
+
+try: only bucketing without partitioning
+
+        CREATE TABLE IF NOT EXISTS EMPLOYEE_B (eid int, name String, salary String, designation String,yoj String)
+        COMMENT 'Employee details'
+        CLUSTERED BY (eid) INTO 3 BUCKETS
+        ROW FORMAT DELIMITED
+        FIELDS TERMINATED BY '\t'
+        LINES TERMINATED BY '\n'
+        STORED AS TEXTFILE;
+
+        INSERT INTO TABLE EMPLOYEE_B (eid, name, salary, designation, yoj) VALUES (100, 'Kumar', 50000, 'Admin', '2020');
+
+
+request goes 
+        hive client ----> hive server  ----> metastore 
+
+
+    metastore: it is basically an rdbms, by default in hive, derby is the embeeded metastore
+
+    hive server: enables clinet to connect to hive through jdbc
+
+    #Hive Server
+    nohup hive --service hiveserver2 >/dev/null 2>&1 &
+
+    hive client:
+
+------------File formats
+
+    CREATE TABLE IF NOT EXISTS employee_json (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
+    STORED AS TEXTFILE;
+
+    insert into employee_json values(1,"Ram",70000,"Associate");
+
+    hadoop fs -cat  hdfs://localhost:9000/user/hive/warehouse/hive_training.db/employee_json/000000_0 
+    {"eid":1,"name":"Ram","salary":"70000","designation":"Associate"}
+
+    # Loading data from local file system
+    LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee.json' OVERWRITE INTO TABLE employee_json;
+
+
+  # Writing data to HDFS file system
+    INSERT OVERWRITE DIRECTORY '/user/training/empmgmt/output' SELECT * FROM employee_json;
+
+# Writing data to local file system
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output/' SELECT * FROM employee_json;
+
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' SELECT * FROM employee_json;
+
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS AVRO SELECT * FROM employee_json ;
+    
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS ORC SELECT * FROM employee_json ;
+
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS PARQUET SELECT * FROM employee_json ;
+
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE SELECT * FROM employee_json ;
+
+
+
+
+    # Writing data in different formats
+
+    # Avro Format
+    CREATE TABLE emp_avro STORED AS AVRO AS SELECT * FROM employee_json;
+
+    # Parquet Format
+    CREATE TABLE emp_parquet STORED AS PARQUET AS SELECT * FROM emp;
+
+    # RC Format
+    CREATE TABLE emp_rc STORED AS RCFILE AS SELECT * FROM emp;
+
+    # ORC Format
+    CREATE TABLE emp_orc STORED AS ORC AS SELECT * FROM emp;
+
+    # Copy data from Avro to Parquet table
+    INSERT INTO emp_parquet SELECT * FROM emp_avro;
+
+    # Copy data from emp_parquet to ORC table
+    INSERT INTO emp_orc SELECT * FROM emp_parquet;
+    Footer
+
+file formats:
+
+    Avro: row based storage,well suited for write heavy transactional loads
+            stored in binary ,serialized compressed format
+
+    ORC:  optimized row columnar ,optimized for read heavy Analytical work loads
+            column oriented storage,almost all hive datatypes supported,compatible on HiveQL
+
+    parquet: column based storage,well suited for ready heavy Analytical work loads
+             widely used format with spark,high compression rates
+        

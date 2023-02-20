@@ -155,6 +155,8 @@ git clone https://github.com/asaravanakumar/futurense_hadoop-pyspark
 --echo $@ --->gives all the arguments
 --echo $$ -->process id of the current shell
 --echo $? -->status of last command
+--echo $USER  -->gives the current user
+
 
 -------------arithmetic operators
 -----there should be space before and after operator to work properly
@@ -181,13 +183,34 @@ git clone https://github.com/asaravanakumar/futurense_hadoop-pyspark
 --crontab generator
 --crontab -e   -->to edit
 
+tr`[]`[]
+wc -l | <a >b&
+& --indicates run in background
 
 
 
 
+hardware interaction --> kernel
+symbolic link --> ?
+finished exec,but status  not collected yet such process--->zombie
+cron  daemon -->
+grep -vn "abc" ---not match lines
+rm chap0[1 - 3] --> ?
+discard output of command --> backup.sh >> /dev/null &
+cat << eof ndk eof  -->?
+echo ${array[0]} -- first element of array
 
 
 
+function_name (){
+    st1..
+    st2..
+    .
+    .
+    .
+    return value
+}
+ 
 
 
 

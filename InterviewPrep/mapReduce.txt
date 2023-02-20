@@ -1,0 +1,52 @@
+
+
+map reduce
+ -distributed processing
+ -processing happens where data resides
+ -executes tasks in parallel
+
+map task happens on each input split
+
+input--> logical split --> map --> shuffle -->reduce -->split
+
+splitting --> key,value 
+mapping -->maps the list of values for keys for each record
+shuffle -->
+
+
+Map Reduce Advanced concepts
+
+    -Combiners  ----> will run on mapper level
+        -local-Reducers : 
+
+
+    -partitioner --> will run on reducer level
+
+    -Map side join-->perform join before data reaches map functions,used when one of dataset is small
+    -reduce side join --> used when both the datasets are large
+    -Distributed cache ---> very small(less than 150mb) reference data can be joined using this. can be done at mapper or reducer level
+
+    -Counters: can track the completion of map or reduce tasks....regards bytes of data read,processed,number of types of records processed etc...
+
+    Hadoop input format
+        -input split
+        -record reader (logic to read records)
+        -mapper
+    
+    hadoop output format
+        - Reducer
+        - Record Writer
+        - Output File 
+
+    Resource Manager
+        -application masters
+        -scheduler
+            -fair scheduler
+            -capacity scheduler
+
+    hadoop file formats -->
+
+
+-pig latin - SCRIPTING LANGAUAGE TO WRITE MAP REDUCE PROGRAMS.its an abstarction of map reduce
+
+--Map reduce program written by hive is highly optimized and fast.

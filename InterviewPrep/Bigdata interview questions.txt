@@ -1,0 +1,136 @@
+
+batch processing- done on historical data 
+real time data - done on real time data 
+
+big data -- collection of data sets that are so large and complex(in Tb and Pb) having
+    high volume
+    Huge variety
+    high velocity
+challanges --capture,curate,storage,search,sharing,transfer,analysis and visualization
+
+data 
+    structured -- tables
+    semi structured --csv,json
+    un structured --> log files,txt,pdfs,images,audios  --> enormous
+
+sources of bigdata
+    -NYSE generates about 1 TB of new trade data per data to perform stock trading analytics
+
+-Big data in industry
+-Data warehouse--eg. redshift,teradata
+    -compute grid --processing
+    -storage grid
+-Data Mart -- sub divisions of data warehouse where curated date is kept and available for further analysis
+
+--->limitations of tradititonal BI Architechture
+        - not capable of storing increasing data( i,e unable to scale up)
+        - movement of data from storage grid to compute grid for processing is not efficient
+
+--> solution -->Storage+Processing layer
+--> hadoop --> Apache hadoop is a framework that allows the distributed processing of large data sets 
+                across clusters of commodity of computers using a simple programming model.
+               -open source 
+    hdfs---------distributed storage
+    mapreduce----distributed processing (processing happens at the each place where data is stored(i,e node level) )
+               ---mapreduce prgram can be written in java,python,scala
+               --hadoop mapreduce is replaced with spark
+                 eg:pyspark,
+
+    charcteristics of hadoop:
+        -economical  -->overall cost of cluster is cheaper than enterprise servers
+        -reliable  -->data replication in other nodes
+        -flexible
+--hadoop 3.3.4 is latest version of hadoop
+    -handled by YARN
+    -uses intra data node balancer
+    -All features + microsoft Azure data lake system
+    -over 10,000 nodes in a cluster
+
+
+hive -- Hive allows users to read, write, and manage petabytes of data using SQL on hdfs
+sqoop --to  load relational data into hdfs
+flume -- to load unstructured data or streaming data
+hbase -- HBase is most effectively used to store non-relational data, accessed via the HBase API. 
+        Apache Phoenix is commonly used as a SQL layer on top of HBase allowing you to use familiar 
+        SQL syntax to insert, delete, and query data stored in HBase.
+orchestration tools ---> to automate and shcedule the datapipeline(ETL) 
+                        eg: Apapche oozy,Airflow
+
+
+active name node --> responsible for managing meta data of all nodes(how many blocks,datanodes where and what replicas...etc..)
+       secondaray name node acts as backup for active name node and both will be in sync
+       -edit logs,
+       -fs image -snapshot of edit logs
+standby name node --> when active name node is down ,stand by acts as active
+     shared edit locks,node having write access is active node
+data node  --> data is stored in data nodes as blocks
+
+task tracker --> 
+
+There are several daemons in Hadoop, including:
+
+    NameNode daemon: responsible for managing the namespace of the HDFS (Hadoop Distributed File System) and controlling access to files by clients.
+
+    DataNode daemon: responsible for storing data in the HDFS and serving read and write requests from the clients.
+
+    ResourceManager daemon: responsible for managing the allocation of computing resources in a Hadoop cluster.
+
+    NodeManager daemon: responsible for managing the resources and launching tasks on a node in the Hadoop cluster.
+
+    SecondaryNameNode daemon: responsible for performing periodic checkpoints of the namespace metadata to keep it consistent in case of a NameNode failure.
+
+    Each daemon runs as a separate process and communicates with other daemons to perform its functions. 
+    The daemons work together to provide a highly available and scalable infrastructure for big data processing.
+
+--ubuntu os
+--java 11
+--ssh and pdsh
+---download and install hadoop
+--configure hadoop
+
+hadoop config files: --> sudo nano etc/hadoop/core-site.xml -->configs related to hdfs & mr , namenode url details,rack and dataa node configurations
+                         sudo nano etc/hadoop/hdfs-site.xml --> hdfs related configs, block configs,replications,
+                         hadoop-env.sh                      --> env variables required to run hadoop
+                         mapred-site.xml 
+                         yarn-site.xml
+                         masters     --->list fo namenaodes,list of datanodes 
+                         slaves      --->
+
+Hadoop modes
+-standalone --
+    - no hadoop daemons, entire process runs on single jvm
+    - suitable for running mapreduce programs during development
+    - has no DFS access
+
+-pseudo distributed mode
+    -Hadoop daemons up, but on a single machine
+
+-Fully distributed mode
+
+
+hadoop namenode 
+
+
+hdfs dfs -ls -R name_node_url/dir_name   --->complete command to access list of files in hdfs
+hadoop fs -df / --> disk free space in human readable format in hdfs
+hadoop fs -chown to_owner file_path
+hadoop fs -chgrp to_owner file_path
+hadoop fs -find dir_path -name *file_pattern
+hadoop fs -stat "required parameters" file_path -->gives the complete file statistics
+
+ hadoop fs -rm -R /user ---delete entire user dir
+ hadoop fs -mkdir /user --create user dir
+ hadoop fs -put /home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/hadoop.txt /user/training
+ hadoop fs -copyFromLocal /home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/hadoop.txt /user/training/hadoop1.txt
+ hadoop fs -appendToFile /home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/hadoop.txt /user/training/hadoop.txt
+ hadoop fs -get /user/training/hadoop.txt /home/ubuntu/hadoop.txt
+ hadoop fs -copyToLocal /user/training/hadoop.txt /home/ubuntu/hadoop.txt
+ hadoop fs -getmerge /user/training/hadoop.txt /user/training/wordcount-input.txt hadoop-merge.txt -->merged file in current dir of local
+
+ 
+  python3 /mnt/c/Users/miles/Documents/Github/Training_futurense/Bigdata/ratings_mr.py -r hadoop hdfs://localhost:9000/user/training/movielens/ratings.csv
+
+
+  python3 ratings_mr.py -r hadoop hdfs://localhost:9000/user/training/movielens/ratings.csv
+
+  hadoop fs -put /mnt/c/Users/miles/Documents/Github/futurense-dataengg-bootcamp/assignments/hive/weather_fine.txt /user/training/weather/
