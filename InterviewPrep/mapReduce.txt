@@ -26,7 +26,7 @@ Map Reduce Advanced concepts
     -reduce side join --> used when both the datasets are large
     -Distributed cache ---> very small(less than 150mb) reference data can be joined using this. can be done at mapper or reducer level
 
-    -Counters: can track the completion of map or reduce tasks....regards bytes of data read,processed,number of types of records processed etc...
+    -Counters: can track the completion of map or reduce tasks....records bytes of data read,processed,number of types of records processed etc...
 
     Hadoop input format
         -input split

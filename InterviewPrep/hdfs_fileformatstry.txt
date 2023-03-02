@@ -1,0 +1,112 @@
+
+
+# Create managed table
+    CREATE TABLE IF NOT EXISTS EMPLOYEE (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n';
+    
+
+LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee.txt' OVERWRITE INTO TABLE EMPLOYEE;
+
+# Storage Information         | NULL                                               | NULL                  |
+| SerDe Library:                | org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe | NULL                  |
+| InputFormat:                  | org.apache.hadoop.mapred.TextInputFormat           | NULL                  |
+| OutputFormat:                 | org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat | NULL                  |
+
+--->able to select --fine
+
+-----------------------------------------
+
+CREATE TABLE IF NOT EXISTS EMPLOYEE2 (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY '\t'
+    LINES TERMINATED BY '\n'
+    STORED AS AVRO;
+LOAD DATA LOCAL INPATH '/home/ram/futurense_hadoop-pyspark/labs/dataset/empmgmt/employee.txt' OVERWRITE INTO TABLE EMPLOYEE2;
+
+ # Storage Information         | NULL                                               | NULL                  |
+| SerDe Library:                | org.apache.hadoop.hive.serde2.avro.AvroSerDe       | NULL                  |
+| InputFormat:                  | org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat | NULL                  |
+| OutputFormat:                 | org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat | NULL                  |
+
+--->table created,data loaded
+--->but,unable to select EMPLOYEE2
+
+Conclusion: 
+    ROW FORMAT DELIMITED          ---> defines whether data to be loaded was delimited or not ,same applies to table data storage
+    FIELDS TERMINATED BY '\t'     ---> defines fields termination,same applies to table data storage
+    LINES TERMINATED BY '\n'     ---> defines lines termination,same applies to table data storage
+    STORED AS AVRO;              ---->defines how data to be loaded was stored, same applies to table data storage
+
+
+--------------------------------------------------------------------------------------------------------
+note: the files in empmgmt/input are in textformat with ',' separated
+
+ # Create external table
+    CREATE EXTERNAL TABLE IF NOT EXISTS EMPLOYEE_EXT (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    LINES TERMINATED BY '\n'
+    LOCATION '/user/training/empmgmt/input';
+
+ # Storage Information         | NULL                                               | NULL                  |
+| SerDe Library:                | org.apache.hadoop.hive.serde2.lazy.LazySimpleSerDe | NULL                  |
+| InputFormat:                  | org.apache.hadoop.mapred.TextInputFormat           | NULL                  |
+| OutputFormat:                 | org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat | NULL                  |
+
+
+-------------------------------------
+    CREATE EXTERNAL TABLE IF NOT EXISTS EMPLOYEE_EXT2 (eid int, name String, salary String, designation String)
+    COMMENT 'Employee details'
+    ROW FORMAT DELIMITED
+    FIELDS TERMINATED BY ','
+    LINES TERMINATED BY '\n'
+    STORED AS PARQUET
+    LOCATION '/user/training/empmgmt/input';
+
+     # Storage Information         | NULL                                               | NULL                  |
+| SerDe Library:                | org.apache.hadoop.hive.ql.io.parquet.serde.ParquetHiveSerDe | NULL                  |
+| InputFormat:                  | org.apache.hadoop.hive.ql.io.parquet.MapredParquetInputFormat | NULL                  |
+| OutputFormat:                 | org.apache.hadoop.hive.ql.io.parquet.MapredParquetOutputFormat | NULL
+
+--->unable to select from employee_ext2
+
+------------------------------------------------
+
+CREATE TABLE my_table(a string, b string)
+        ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
+        WITH SERDEPROPERTIES (
+        "separatorChar" = "\t",
+        "quoteChar"     = "'",
+        "escapeChar"    = "\\"
+        )  
+        STORED AS TEXTFILE;
+
+# Storage Information         | NULL                                               | NULL                                               |
+| SerDe Library:                | org.apache.hadoop.hive.serde2.OpenCSVSerde         | NULL                                               |
+| InputFormat:                  | org.apache.hadoop.mapred.TextInputFormat           | NULL                                               |
+| OutputFormat:                 | org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat | NULL
+
+
+
+-----------------------------------------------------
+
+CREATE TABLE apachelog (
+  host STRING,
+  identity STRING,
+  user STRING,
+  time STRING,
+  request STRING,
+  status STRING,
+  size STRING,
+  referer STRING,
+  agent STRING)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.RegexSerDe'
+WITH SERDEPROPERTIES (
+  "input.regex" = "([^]*) ([^]*) ([^]*) (-|\\[^\\]*\\]) ([^ \"]*|\"[^\"]*\") (-|[0-9]*) (-|[0-9]*)(?: ([^ \"]*|\".*\") ([^ \"]*|\".*\"))?"
+)
+STORED AS TEXTFILE;

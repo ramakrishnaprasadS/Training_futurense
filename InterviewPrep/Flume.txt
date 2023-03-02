@@ -1,0 +1,9 @@
+Flume : import and export unstructured or streaming  data into hdfs
+
+Flume Architecture:
+    Application
+    Flume Agent
+        Source   --> Channel --> HDFS Sink   --> Write to HDFS
+        Source   --> Channel -->Kafka Sink   ---> Publish to kafka topic
+
+  

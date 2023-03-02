@@ -1,0 +1,24 @@
+
+sqoop --abstarction on top of map reduce to import and export structured data(database tables) in bulk
+
+step1: download and setup sqoop
+step2: configure sqoop to connect Hadoop
+step3: configure sqoop to connect to mysql
+
+
+    sqoop commands are inturn converted to mr jobs and get the things done
+   --connect ot databse and 
+    sqoop import <table_name> <target file_path> --m 2     -->specifying to map tasks
+    --we can also load incremental data
+
+    sqoop export <source file_path>  <target table_name> 
+
+
+
+    -sqoop Architecture
+        sqoop can load into hivetables,warehouse tables,hdfs files
+
+        sqoop import
+        fetch metadata
+        submit map only job
+        map tasks created and data is loaded to hdfs storage

@@ -1,0 +1,341 @@
+
+sparksql : abstraction on top of core spark for structured data processing
+            where we can write sql queries which inturn get converted to rdd transformations and actions and then to tasks.
+
+DataFrame: data is organied into named columns,like a table in a relational database
+
+dataset:
+
+
+
+from pyspark.sql import SparkSession
+spark = SparkSession.builder \
+    .master("local[1]") \
+    .appName("pyspark-examples") \
+    .getOrCreate()
+
+df = spark.read.json("/home/ram/futurense_hadoop-pyspark/labs/dataset/people/people.json")
+
+df.printSchema()
+df.show()
+df.show(5)
+df.show(truncate=False)
+df.rdd.getNumPartitions()
+df.rdd.count()
+df.rdd.collect()
+df.columns
+
+rdd.toDF().show()
+
+---------------------------------
+ --create a PySpark DataFrame from a list of rows
+
+from datetime import datetime, date
+import pandas as pd
+from pyspark.sql import Row
+
+df = spark.createDataFrame([
+    Row(a=1, b=2., c='string1', d=date(2000, 1, 1), e=datetime(2000, 1, 1, 12, 0)),
+    Row(a=2, b=3., c='string2', d=date(2000, 2, 1), e=datetime(2000, 1, 2, 12, 0)),
+    Row(a=4, b=5., c='string3', d=date(2000, 3, 1), e=datetime(2000, 1, 3, 12, 0))
+])
+df
+
+
+--------------------------------------------------
+--Create a PySpark DataFrame with an explicit schema.
+
+df = spark.createDataFrame([
+    (100, 2., 'string1', date(2000, 1, 1), datetime(2000, 1, 1, 12, 0)),
+    (101, 3., 'string2', date(2000, 2, 1), datetime(2000, 1, 2, 12, 0)),
+    (102, 4., 'string3', date(2000, 3, 1), datetime(2000, 1, 3, 12, 0))
+], schema='a long, b double, c string, d date, e timestamp')
+df
+
+----------------------------------------------------------------
+--Create a PySpark DataFrame from a pandas DataFrame
+pandas_df = pd.DataFrame({
+    'a': [1, 2, 3],
+    'b': [2., 3., 4.],
+    'c': ['string1', 'string2', 'string3'],
+    'd': [date(2000, 1, 1), date(2000, 2, 1), date(2000, 3, 1)],
+    'e': [datetime(2000, 1, 1, 12, 0), datetime(2000, 1, 2, 12, 0), datetime(2000, 1, 3, 12, 0)]
+})
+df = spark.createDataFrame(pandas_df)
+df
+
+df2=df.toPandas()
+df2
+
+---------------------------
+df.show(1,vertical=True)
+df.select(df.col1_name,df.col2_name,df.col3_name)
+df.select(df['col1_name'],df['col2_name'])
+---------------------------
+
+from pyspark.sql import Column
+from pyspark.sql.functions import upper,concat
+
+type(df.c) == type(upper(df.c)) == type(df.c.isNull())
+
+df2 = spark.createDataFrame(trans,schema='a int, b string, c float, d string')
+
+df3=df2.withColumn('desc', concat_ws(' ',df2.type,df2.amt ))
+df3=df2.withColumn('desc', concat(df2.type,df2.amt ))
+df4=df3.withColumn('tmstp', datetime.now()))
+
+
+dft = spark.createDataFrame([
+Row(ID=101, Trans='DEBIT', Amount=1000.0, Country_code='IND',Time=datetime(2023,2,28,5,6)),
+Row(ID=102, Trans='CREDIT', Amount=1000.0, Country_code='IND',Time=datetime(2023,2,27,7,5)),
+Row(ID=103, Trans='DEBIT', Amount=1000.0, Country_code='AUS',Time=datetime(2023,2,26,8,4)),
+Row(ID=104, Trans='CREDIT',Amount=1000.0, Country_code='JPN',Time=datetime(2023,2,13,6,7)),
+Row(ID=105, Trans='DEBIT', Amount=1000.0, Country_code='IND',Time=datetime(2023,2,8,6,4))
+])
+
+from pyspark.sql.functions import *
+
+dft.filter((dft.amt>=1000) & (dft.Time >= datetime(2023,2,21)) ).show()
+
+dft.filter((dft.Amount>=1000) & (dft.Time >= date_sub(current_date(),7)) ).show()
+
+--Drop column --> 
+--Rename column --> 
+
+
+---Filtering
+    df3.filter(df3.amt>3000).show()
+     df3.filter((df3.amt>3000) & (df3.type=='Credit')).show()
+     df3.filter((df3.amt>3000) & (df3.type=='Credit') & (df3.code.like('J%'))).show()
+      
+---Grouping
+    dft.groupby('Trans').sum('Amount').show()
+      dft.select('Trans','Amount').groupby('Trans').sum().show()
+      dft.groupby().sum('Amount').show()
+      dft.groupby().count().show()
+---Aggregation
+---Joins
+
+
+
+df.rdd --> to convert df to rdd
+df.rdd.getNumPartitions()
+df.rdd.repartition() or df.
+
+
+---------------------
+
+import pyspark
+from pyspark.sql import SparkSession
+from pyspark.sql.types import StructType,StructField, StringType, IntegerType,ArrayType,MapType
+from pyspark.sql.functions import col,struct,when
+
+spark = SparkSession.builder.master("local[1]") \
+                    .appName('pyspark-examples') \
+                    .getOrCreate()
+
+data = [("James","","Smith","36636","M",3000),
+    ("Michael","Rose","","40288","M",4000),
+    ("Robert","","Williams","42114","M",4000),
+    ("Maria","Anne","Jones","39192","F",4000),
+    ("Jen","Mary","Brown","","F",-1)
+  ]
+
+schema = StructType([ 
+    StructField("firstname",StringType(),True), 
+    StructField("middlename",StringType(),True), 
+    StructField("lastname",StringType(),True), 
+    StructField("id", StringType(), True), 
+    StructField("gender", StringType(), True), 
+    StructField("salary", IntegerType(), True) 
+  ])
+ 
+df = spark.createDataFrame(data=data,schema=schema)
+df.printSchema()
+
+structureData = [
+    (("James","","Smith"),"36636","M",3100),
+    (("Michael","Rose",""),"40288","M",4300),
+    (("Robert","","Williams"),"42114","M",1400),
+    (("Maria","Anne","Jones"),"39192","F",5500),
+    (("Jen","Mary","Brown"),"","F",-1)
+  ]
+structureSchema = StructType([
+        StructField('name', StructType([
+             StructField('firstname', StringType(), True),
+             StructField('middlename', StringType(), True),
+             StructField('lastname', StringType(), True)
+             ])),
+         StructField('id', StringType(), True),
+         StructField('gender', StringType(), True),
+         StructField('salary', IntegerType(), True)
+         ])
+arrayStructureSchema = StructType([
+    StructField('name', StructType([
+       StructField('firstname', StringType(), True),
+       StructField('middlename', StringType(), True),
+       StructField('lastname', StringType(), True)
+       ])),
+       StructField('hobbies', ArrayType(StringType()), True),
+       StructField('properties', MapType(StringType(),StringType()), True)
+    ])
+
+df2 = spark.createDataFrame(data=structureData,schema=structureSchema)
+df2.printSchema()
+
+
+
+--df2.filter(df2.salary>5000).show()
+--df2.filter(df2.name['firstname']=='James').show()
+--df2.filter(df2.name['middlename']=='').show()
+-- df2.filter(df2.name['lastname'].like('%s%')).show()
+--df2.filter(df2.name.lastname.like('%s%')).show()
+--df2.filter(upper(df2.name.lastname).like('%S%')).show()
+--df2.select(concat_ws(' ',df2.name.firstname,df2.name.middlename,df2.name.lastname).alias('fullname'),df2.id,df2.gender,df2.salary).show()
+--df2.withColumn('fullname',concat_ws(' ',df2.name.firstname,df2.name.middlename,df2.name.lastname)).show()
+--df3.withColumnRenamed('fullname','fname').show()
+-- df3=df3.drop('name')
+-- df3.select(min(df3.salary),max(df3.salary),avg(df3.salary)).show()
+--df3.describe().show()
+
+*****updatedDF = df2.withColumn("OtherInfo", 
+                                            struct(col("id").alias("identifier"),
+                                                    col("gender").alias("gender"),
+                                                    col("salary").alias("salary"),
+                                                    when(col("salary").cast(IntegerType()) < 2000,"Low")
+                                                    .when(col("salary").cast(IntegerType()) < 4000,"Medium")
+                                                    .otherwise("High").alias("Salary_Grade")
+                                )).drop("id","gender","salary")*********
+
+
+--df5=df2.withColumn('salary_grade',when(col("salary").cast(IntegerType()) < 2000,"Low").when(col("salary").cast(IntegerType()) < 4000,"Medium").otherwise("High"))
+
+--df22=df.select(col("*"), when(col("gender") == "M","Male").when(col("gender") == "F","Female").otherwise("Unknown").alias("new_gender")).show(truncate=False)
+
+data2 = [(66, "a", "4"), (67, "a", "0"), (70, "b", "4"), (71, "d", "4")]
+df5 = spark.createDataFrame(data = data2, schema = ["id", "code", "amt"])
+         
+
+--df5.withColumn("new_column", when((col("code") == "a") | (col("code") == "d"), "A").when((col("code") == "b") & (col("amt") == "4"), "B").otherwise("A1")).show()
+
+--df4 = df.select(col("*"), expr("case when gender = 'M' then 'Male' " + "when gender = 'F' then 'Female' " + "else 'Unknown' end").alias("new_gender"))
+
+--df.withColumn('Active',lit('TRUE')).show()
+
+--df3 = df2.withColumn("lit_value2", when(col("Salary") >=40000 & col("Salary") <= 50000,lit("100")).otherwise(lit("200")))
+
+data = [
+    ("James",None,"M"),
+    ("Anna","NY","F"),
+    ("Julia",None,None)
+]
+
+columns = ["name","state","gender"]
+df =spark.createDataFrame(data,columns)
+df.filter("state is NULL").show()
+df.filter(df.state.isNull()).show()
+df.filter(col("state").isNull()).show()
+
+df.filter("state IS NULL AND gender IS NULL").show()
+df.filter(df.state.isNull() & df.gender.isNull()).show()
+
+df.filter("state is not NULL").show()
+df.filter("NOT state is NULL").show()
+df.filter(df.state.isNotNull()).show()
+df.filter(col("state").isNotNull()).show()
+df.na.drop(subset=["state"]).show()
+df.na.drop(how="any").show(truncate=False)  # default
+df.na.drop(how="all").show(truncate=False)
+thresh: remove records which have less number of non nulls than thresh.
+
+df.na.drop(how="any",thresh=2).show(truncate=False)
+df.na.drop(how="all",thresh=2).show(truncate=False)   
+
+df.na.drop(subset=["population","type"]) \
+   .show(truncate=False)
+
+df.createOrReplaceTempView("DATA")
+spark.sql("SELECT * FROM DATA where STATE IS NULL").show()
+spark.sql("SELECT * FROM DATA where STATE IS NULL AND GENDER IS NULL").show()
+spark.sql("SELECT * FROM DATA where STATE IS NOT NULL").show()
+
+
+
+df.fillna(value='CA',subset=["state"]).show()
+df.na.fill(value='CA',subset=["state"]).show()
+
+from pyspark.sql.functions import col,explode
+from pyspark.sql.types import StringType,BooleanType,DateType
+df2 = df.withColumn("age",col("age").cast(StringType())) \
+    .withColumn("isGraduated",col("isGraduated").cast(BooleanType())) \
+    .withColumn("jobStartDate",col("jobStartDate").cast(DateType()))
+df2.printSchema()
+
+df3 = df2.selectExpr("cast(age as int) age",
+    "cast(isGraduated as string) isGraduated",
+    "cast(jobStartDate as string) jobStartDate")
+
+
+--df.select(df.name,explode(df.languagesAtSchool)).show()
+--df.select(df.name,explode_outer(df.knownLanguages)).show() -->explode null also
+--df.select(df.name,posexplode(df.knownLanguages)).show() --->explode with array position column
+--df.select(df.name,posexplode(df.knownLanguages)).show()  -->explode with array position column with null aslo
+--df.filter((df.state == 'OH') & (array_contains(df.languages,'Java'))).show()
+
+
+arrayStructureData = [
+        (("James","","Smith"),["Java","Scala","C++"],"OH","M",{"home":"City Center","work":"City Tech Park"}),
+        (("Anna","Rose",""),["Spark","Java","C++"],"NY","F",{}),
+        (("Julia","","Williams"),["CSharp","VB"],"OH","F",{}),
+        (("Maria","Anne","Jones"),["CSharp","VB"],"NY","M",{}),
+        (("Jen","Mary","Brown"),["CSharp","VB"],"NY","M",{}),
+        (("Mike","Mary","Williams"),["Python","VB"],"OH","M",{})
+        ]
+
+arrayStructureSchema = StructType([
+        StructField('name', StructType([StructField('firstname', StringType(), True),StructField('middlename', StringType(), True),StructField('lastname', StringType(), True)])),
+         StructField('languages', ArrayType(StringType()), True),
+         StructField('state', StringType(), True),
+         StructField('gender', StringType(), True),
+         StructField('address', MapType(StringType(),StringType()), True)
+         ])
+
+-- df.filter(df['address']['work']=='City Tech Park').show()
+-- df.filter(df.address.work=='City Tech Park').show()
+-- df.filter((df['state']=='NY') & (to_csv(df.name).like('%Anne%'))).show()
+
+
+--df.groupBy("department").sum("salary").show(truncate=False)
+--df.groupBy("department") \
+    .agg(sum("salary").alias("sum_salary"), \
+         avg("salary").alias("avg_salary"), \
+         sum("bonus").alias("sum_bonus"), \
+         max("bonus").alias("max_bonus") \
+     ) \
+    .show(truncate=False)
+
+--df.select(sum('salary'),avg('salary'),sum('bonus'),max('bonus')).show()
+
+--df.groupBy("department",'state').agg(avg('salary').alias('avgsal')).filter(col('avgsal')>80000).show()
+-- df.groupBy("department").agg(avg('salary').alias('avgsal')).where(col('avgsal')>80000).show()
+--df.select(count_distinct(df.salary)).show()
+--df.select(approx_count_distinct(df.salary)).show()
+--print("approx_count_distinct: " + \
+      str(df.select(approx_count_distinct("salary")).collect()[0][0]))
+--df.select(collect_list("salary")).show(truncate=False)
+df.select(first("salary")).show(truncate=False)
+df.select(last("salary")).show(truncate=False)
+df.select(kurtosis("salary")).show(truncate=False)
+df.select(max("salary")).show(truncate=False)
+df.select(min("salary")).show(truncate=False)
+df.select(mean("salary")).show(truncate=False)
+df.select(skewness("salary")).show(truncate=False)
+df.select(stddev("salary"), stddev_samp("salary"), \
+    stddev_pop("salary")).show(truncate=False)
+df.select(sum("salary")).show(truncate=False)
+df.select(sumDistinct("salary")).show(truncate=False)
+df.select(variance("salary"),var_samp("salary"),var_pop("salary")) \
+  .show(truncate=False)
+
+        
+

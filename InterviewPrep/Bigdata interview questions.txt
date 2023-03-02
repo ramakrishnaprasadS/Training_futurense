@@ -92,9 +92,9 @@ hadoop config files: --> sudo nano etc/hadoop/core-site.xml -->configs related t
                          sudo nano etc/hadoop/hdfs-site.xml --> hdfs related configs, block configs,replications,
                          hadoop-env.sh                      --> env variables required to run hadoop
                          mapred-site.xml 
-                         yarn-site.xml
-                         masters     --->list fo namenaodes,list of datanodes 
-                         slaves      --->
+                         yarn-site.xml                      --->resource manager and node manager related settings
+                         masters     --->list of machines that run  namenaodes or secondary namenodes 
+                         slaves      --->list of machines that run data nodes and node manager
 
 Hadoop modes
 -standalone --
@@ -108,7 +108,19 @@ Hadoop modes
 -Fully distributed mode
 
 
-hadoop namenode 
+hadoop namenode :
+    contains metadata .
+    -keeps tract of entire filedirectory structure and placement of datablock
+    -location details of data nodes and data blocks
+    --keeps log of file creations and deletions
+
+hadoop standbynamenode:
+    -standby for namenode,metadata is always in sync,has shared edit logs,
+
+hadoop SecondaryNameNode:
+    -connects to namenode for every hour and takes metadata backup
+
+
 
 
 hdfs dfs -ls -R name_node_url/dir_name   --->complete command to access list of files in hdfs
@@ -128,6 +140,10 @@ hadoop fs -stat "required parameters" file_path -->gives the complete file stati
  hadoop fs -getmerge /user/training/hadoop.txt /user/training/wordcount-input.txt hadoop-merge.txt -->merged file in current dir of local
 
  
+hadoop fs find -type f -size 100  ----------> files larger than 1gb in a directory
+
+
+
   python3 /mnt/c/Users/miles/Documents/Github/Training_futurense/Bigdata/ratings_mr.py -r hadoop hdfs://localhost:9000/user/training/movielens/ratings.csv
 
 

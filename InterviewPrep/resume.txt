@@ -1,0 +1,130 @@
+
+summary:
+    Software Developer with around 1.4 years of experience in building  interactive voice applications,
+     possess hands-on experience in solving design implementation challenges in Automation applications. 
+     Inclined towards the field of data engineering with a desire to expand my skill set.
+
+Professional Experience:
+    Data Specialist
+    Futurense Technologies 12/2022 - Ongoing  Banglore,Karnataka
+    Tools Used: SQL, Python, Git, AWS Cloud, Big Data, Spark,IBM DataStage
+    Implemented SQL reporting on Hospital management system to gain insights on building various reporting formats.
+    Gained an overview of the whole process of Data Engineering
+    Data processing and analysis done Health Census data using Pandas DataFrames.
+    Gianed  knowledge in IBM Datastage tool,hadoop,mapreduce,hive and spark technologies.
+
+    Software Developer:
+    Tata Consultancy Services Ltd. 05/2021 - 10/2022  Hyderabad,Andhra Pradesh
+    Tools Used: Aspect Cxp tool ,Javascript,Unix Shell Scripting,JIRA
+    Developed Automation features in IVR Applications for end user usage in
+    Telecom domain for a UK based Client using Agile methadalogy.
+    These features  enabled self serve flexibility to users thereby 
+    reduced 70% of call transfers to helpdesk agents.
+    Used unix shellscripting for updating Application config files and Javascript
+    in making backend API calls.
+
+Projects:
+
+    Academic Course Schedule Database
+    Design and implementation   10/2022 -12/2022
+    Tools used: Mysql,python Db connectivity,AWS RDS
+    Hosted the database in AWS RDS and connected to it with Mysql workbench client .
+    Created Academic Course Schedule Databse with 20+ tables by following database design rules,
+    tables normalized till 4NF,created 15+ procedures to ease the CRUD operations on database.
+    Created Indexes for  tables and increased query performance by 40%,
+    implemented 15+ triggers for restricting,logging .
+    Access control was taken care for different user levels and tested it by inserting large
+    number of records using python-mysql database connectivity.
+
+
+    Typing Speed Test
+    Technologies used: HTML, CSS, JS, REST API Calls, Bootstrap
+    Developed an application which measures the time that the user take to complete given paragraph
+    Maintained timer by using APIs setTimeInterval, clearTimeInterval and Updated timer in the UI dynamically using JavaScript DOM operations for every 1 second.
+    Fetched the paragraph from server asynchronously using fetch GET HTTP API call and displayed it on UI by using JavaScript DOM Operations.
+    Displayed time that user took in the UI using JavaScript event listeners once user clicked on submit button, Did form validations for incomplete paragraph.
+    Technologies used: HTML, CSS, JS, REST API Calls, Bootstrap.
+
+    or
+
+    python health census project
+    -----
+    ----
+    ----
+    ----
+
+
+    Education
+    B.Tech - EEE  9.43/10
+    RVR & JC College of Engineering,Guntur,A.P
+    07/2017 - 07/2021
+
+    Programming Languages
+    SQL
+    python
+
+    Technology Skill sets
+    Pandas  6/10
+    Hadoop  6/10
+    Hive    6/10
+    Spark   6/10
+    AWS     5/10
+    DataStage 6/10
+    Git     6/10
+    shell Scripting 6/10
+    JavaScript 6/10
+    Webdesign  6/10
+
+
+    Certifications:
+    IRC Certifications in Python,Databases,
+    static and responsive webdesign ,Javascript.
+    NxtWave 07/2022 - 11/2022
+
+    Programming and problem solving using Python
+    NPTEL IIT Madras 03/2020
+
+    Achievements:
+    B.Tech Branch Topper in 2021
+    with 9.43/10 CGPA
+
+    Secured 983/1000 marks in Intermediate
+    Board Exams and became eligible for Higher
+    Education Scholorship by APSHE 
+    under INSPIRE Scheme.
+
+    Interests
+    playing volleyball,listening music
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    

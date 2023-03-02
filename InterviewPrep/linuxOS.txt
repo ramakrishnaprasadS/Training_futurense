@@ -11,7 +11,7 @@ kernel-interacts with underlying hardware ,by converting the inputs from shell t
 
 --distribution to distribution has some changes in kernel and shells
 --shell scripts should be written specific to shell based on the shell specific syntax
---different types fo shells:
+--different types of shells:
             1.Bourne shell(sh) -- standard ,available mostly
             2.C shell(csh)
             3.Bash             -- advanced ,supports more commands...(default for ubuntu)
@@ -123,6 +123,7 @@ linux file system
 
 
 
+
 -----------------------------SHELL SCRIPTING-----------------
 
 ---#!/bin/sh
@@ -171,8 +172,8 @@ git clone https://github.com/asaravanakumar/futurense_hadoop-pyspark
 
 ---tar to untar  and zip and unzip
 
---tar -czvf filename.tar.gz path1 path2 path3 ...(path1,2,3 are paths of file to be compressed)
---tar -xzvf filename.tar.gz -C path_fbbb                                                                                                                                                                                                                                          or_extraction
+--tar -czvf filename.tgz path1 path2 path3 ...(path1,2,3 are paths of file to be compressed)
+--tar -xzvf filename.tgz -C path_fbbb                                                                                                                                                                                                                                          or_extraction
 --zip -r zipfilename.zip path1 path2 path3
 --unzip zipfilefilename.zip -d path_to_unzip
 
@@ -195,7 +196,7 @@ symbolic link --> ?
 finished exec,but status  not collected yet such process--->zombie
 cron  daemon -->
 grep -vn "abc" ---not match lines
-rm chap0[1 - 3] --> ?
+rm chap0[1 - 3] --> remove file chap0[1 - 3]
 discard output of command --> backup.sh >> /dev/null &
 cat << eof ndk eof  -->?
 echo ${array[0]} -- first element of array

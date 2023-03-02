@@ -1,0 +1,56 @@
+HELTHCARE SYSTEM
+The primary objective of the project is to create a database with required data validations as mentioned. The database is in turn used for generating welcome letters in xml format for each subscriber.
+ 
+The following are the modules in this proposed system
+a) Group
+b) Sub Group
+c) Subscribe
+
+Scope of the system
+The scope of the system is explained through its modules as follows
+· Group – This module is to analyze the Group information provided and load them into the database in the corresponding Group table.
+· Sub Group – This module is to analyze the Sub Group information provided and load them into the database in the corresponding Sub Group table with only the matching groups in the Group table that is previously loaded.
+· Subscriber – This module is to analyze the Subscriber information provided and load them into the database in the corresponding Subscriber table with only the matching groups in the Group table and sub groups in the subgroup table that were previously loaded
+
+Functional Requirements
+1.3.1 Group
+
+Functional Requirements
+1. Rename the input file as Group_Fixed_<Associate_Id>.txt and Group_Comma_<Associate_Id>.csv. 
+2. Create a table in sql plus by name Group_<Associate_Id>.
+ 3. Validate the data from the input file and load only valid records into the target table according to the constraints mentioned in the target table.
+ 4. Load only the members who are currently effective. (i.e) SYSDATE BETWEEN EFFT_DT AND TERM_DT.
+5. Populate leading zeroes in GROUP_ID field while populating into the target table.
+6. GRP_SK is the surrogate key.
+
+Sub Group
+requirement 
+
+1. Rename the input file as SUBGRP_<Associate_Id>.txt. 
+2. Create table in sql plus by name SUBGRP_<Associate_Id> with the above structure. 
+3. Validate the data from the input file and load only valid records into the target table according to the constraints mentioned in the target table.
+ 4. Populate leading zeroes in the fields GROUP_ID and SUBGRP_ID while loading into the table. 
+5. Also validate the Group Id against the Group table and
+DW – Illness Req-2.1.1
+Functional Requirements
+1. Rename the input file as Group_Fixed_<Associate_Id>.txt and Group_Comma_<Associate_Id>.csv. 
+2. Create a table in sql plus by name Group_<Associate_Id>.
+ 3. Validate the data from the input file and load only valid records into the target table according to the constraints mentioned in the target table. 
+4. Load only the members who are currently effective. (i.e) SYSDATE BETWEEN EFFT_DT AND TERM_DT. 
+5. Populate leading zeroes in GROUP_ID field while populating into the target table. 
+6. GRP_SK is the surrogate key.load only matching data into the target table.
+6. Load the non matching values into Target file with the same structure as source and name the file as SUBGRP_Join_Errors_<Associate_Id>.txt 
+7. SUBGRP_SK is the surrogate key
+Subscriber
+Requirment
+1. Rename the input file as SUBSCRIBER_<Associate_Id>.csv
+ 2. Create table in sql plus by name SUBSCRIBER_<Associate_Id> with the above structure.
+ 3. Load only the members who are currently effective. (i.e) SYSDATE BETWEEN EFFT_DT AND TERM_DT. 
+4. Load subscribers with Elig_Ind as ‘Y’ in the Target table and with Elig_Ind as ‘N’ into Target file with the same structure as source and name the file as SUBSCRIBER_Errors_<Associate_Id>.txt 
+5. Reject records if the Subscriber_Id has less than 9 characters.
+ 6. Populate leading zeroes in the fields GROUP_ID and SUBGRP_ID while populating data into the Target table.
+ 7. Validate the data from the input file and load only valid records into the target table according to the constraints mentioned in the target table.
+ 8. Also validate the Group Id and Subgrp_Id against the Subgrp table and load only matching data into the target table. 
+9. SUB_SK is the surrogate key.
+
+

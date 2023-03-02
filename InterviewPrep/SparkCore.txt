@@ -1,0 +1,300 @@
+
+Spark : It is a fast and general engine for large-scale distributed in memory data processing.
+        spark be written in scala,java,python,sql,R
+
+-Spark can run on top of yarn or mesos or Kuberenetes.
+
+in mapreduce way of processing more disk IO s are there ,in which the processing becomes very slow
+
+So,it can be improved if we reduce the disk IO s  by doing the processing in the memory
+
+So before processing data is loaded in memeory
+
+    -data storage unit in spark is RDD --> 
+        RDD is partitioned and stored in different memeory locations 
+          --So for every RDD partittion map task is performed
+             -the map jobs are written in pyspark
+--Spark is 10 times faster than mapreduce.
+
+---Spark wont fail if there is no enough memory, it will just switch to disk processing.
+
+---Hive queries also can be inturn coverted to spark jobs.
+
+spark modes:
+    spark is capable of working on top of any cluster manager
+        -local--no cluster manager
+        -Standalone -- in this mode spark uses its own clustermanager ,has master and worker nodes
+        -Yarn 
+        -Mesos
+        -Kuberenetes
+
+
+----Spark Cluster Architecture
+        -Driver --> to coordinate the execution of spark program
+                    -for each spark job it has its own driver
+            -sparkCOntext --contain spark session details,cluster details
+                  --sparksql context,hivecontext,streaming context
+            -scheduler-will decide where the program needs to be executed
+                        foe example if Standalone ,submits to cluster manager
+                                    if yarn ,submits to resource manager
+
+Spark components:
+    spark sql : 
+
+
+
+
+rdd4.saveAsTextFile("home/ram/trans.txt")
+
+
+
+
+-----------------------------datastructure of spark----
+
+RDD - Resilient data structureof spark
+      immutable distributed collection of objects stored in memory or disk across a cluster
+
+      operations in RDD is represented as DAG (Directed Asyclic Graph)
+      executions are performed only when action is triggered
+
+    Actions:sum,count,reduce etc....-----produce a result of any type of object
+    Transformation:filter,join,...etc  -------new RDD created
+
+    Action --->job-->stage-->task-->executor
+
+pyspark --help
+
+ pyspark --master spark://MILE-BL-4302-LAP.localdomain:7077
+
+
+
+ rdd1 = sc.textFile("/home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/wordcount-input.txt")
+ rdd1.getNumPartitions() Returns the number of partitions in RDD
+ rdd1.collect() -->collects data from all partitions ..-->[actions]
+rdd2=rdd1.flatMap(lambda x: x.split())
+rdd3=rdd2.map(lambda x: (x,1))
+rdd4=rdd3.reduceByKey(lambda a, b: a + b)
+
+Spark Modules:
+    -Spark Core
+        -sparkContext
+        -Spark Session--Abstraction on different COntexts--Spark Context,SQL Context,Hive Context,Streaming Context
+        -RDD
+        -DAG
+        -Transformation
+            Narrow
+            wide
+        -Action
+
+
+Transformations
+    Narrow--->map,filter,flatmap,mapPartition
+    Wide---involves shuffling-->repartiton ,join,groupbykey,reducebykey,Aggregateby
+
+Actions
+    count
+    min
+    max
+    mean
+    collect
+    reduce(function..)
+    aggregate(0,func1,func2)
+    sum
+    forEach
+    foreachPartition
+    saveAsTextFile
+    first
+    
+rdd.count()
+rdd.max()
+rdd.min()
+rdd.take(number_of_elements)
+
+
+
+****coalesce is better than repartiton to reduce the number of partitions
+
+RDD Storage
+    memory_only
+    memeory_and_disk
+    DISK_ONLy
+    //memeory_Only_ser
+    //memeory_and_disk_ser
+    memeory_only_2
+    memeory_and_disk_2
+
+rdd.persist(pyspark.StorageLevel.MEMORY_AND_DISK_2)
+rdd.getStorageLevel()
+rdd.unpersist()
+
+
+rdd=sc.parallelize([1,2,3,4],2)
+def f(iterator): yield sum(iterator)
+rdd.mapPartitions(f).collect()    // [3,7]
+
+----------------
+rdd1.union(rdd2)
+rdd1.intersection(rdd2)
+-------------
+x.join(y)
+
+x.cogroup(y) 
+
+cartesian
+
+--------rdd.groupByKey().mapValues(len).collect()
+--------rdd.reduceByKey().mapValues(add).collect()
+--------rdd.agrregateByKey(0,lambda a,b : a+b,lambda a,b:a+b+1)
+
+
+-----------------------------------
+
+shared variables:
+    Broadcast variables: Broadcast variables allow the programmer to keep a read-only variable 
+                            cached on each machine rather than shipping a copy of it with tasks.
+
+            from pyspark import SparkContext 
+            sc = SparkContext("local", "Broadcast app") 
+            words_new = sc.broadcast(["scala", "java", "hadoop", "spark", "akka"]) 
+            data = words_new.value 
+            print("Stored data --> %s" % (data)) 
+            elem = words_new.value[2] 
+            print "Printing a particular element in RDD -> %s" % (elem)
+
+            -------------------------------------------
+
+            countries =sc.broadcast({'IND':'India','AUS':'Australia','JPN':'Japan'})
+            cnt=countries.value
+            trans=sc.parallize([[100,'Debit',1000.0,'IND'],[101,'Credit',2000.0,'IND'],[102,'Debit',3000.0,'AUS'],[103,'Credit',4000.0,'JPN'],[104,'Debit',5000.0,'IND'],[105,'Credit',6000.0,'AUS']])
+            def chg(ky):
+                return cnt[ky]
+            for key,val in trans.map(lambda x:(x[1],x[3])).groupBy(lambda x:x).collect():
+                 print(key[0],chg(key[1]),len(val))    
+
+            -------------------------------
+
+    Accumilator :its like a counter,with which we can monitor the tasks, we can create them as per our requirement
+        from pyspark import SparkContext 
+        sc = SparkContext("local", "Accumulator app") 
+        num = sc.accumulator(10) 
+        def f(x): 
+            global num 
+            num+=x 
+        rdd = sc.parallelize([20,30,40,50]) 
+        rdd.foreach(f) 
+        final = num.value 
+        print("Accumulated value is -> %i" % (final))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------------------------------
+#PySpark wordcount example
+lines = sc.textFile("/home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/wordcount-input.txt")
+counts = lines.flatMap(lambda x: x.split(' ')) \
+			  .map(lambda x: (x, 1)) \
+			  .reduceByKey(lambda a, b: a + b)
+output = counts.collect()
+for (word, count) in output:
+	print("%s: %i" % (word, count))
+
+
+sudo ln -s python  /usr/bin/python3.6
+
+
+
+
+
+-----------------------------------------------------------------
+
+spark = SparkSession.builder.appName('SparkByExamples.com').getOrCreate()
+
+dept = [("Finance",10), \
+    ("Marketing",20), \
+    ("Sales",30), \
+    ("IT",40) \
+  ]
+deptColumns = ["dept_name","dept_id"]
+deptDF = spark.createDataFrame(data=dept, schema = deptColumns)
+deptDF.show(truncate=False)
+dataCollect = deptDF.collect()
+print(dataCollect)
+
+---------------------------------------------
+data = ["Project Gutenberg’s",
+        "Alice’s Adventures in Wonderland",
+        "Project Gutenberg’s",
+        "Adventures in Wonderland",
+        "Project Gutenberg’s"]
+rdd=spark.sparkContext.parallelize(data)
+for element in rdd.collect():
+    print(element)
+
+
+
+rdd2=rdd.flatMap(lambda x: x.split(" "))
+for element in rdd2.collect():
+    print(element)
+
+-----------------------------------------------------
+
+spark = SparkSession.builder.master("local[1]") \
+    .appName("SparkByExamples.com").getOrCreate()
+
+data = ["Project","Gutenberg’s","Alice’s","Adventures",
+"in","Wonderland","Project","Gutenberg’s","Adventures",
+"in","Wonderland","Project","Gutenberg’s"]
+
+rdd=spark.sparkContext.parallelize(data)
+
+rdd2=rdd.map(lambda x: (x,1))
+for element in rdd2.collect():
+    print(element)
+
+
+---------------------------
+
+spark = SparkSession.builder.appName('SparkByExamples.com').getOrCreate()
+
+data = [('Project', 1),
+('Gutenberg’s', 1),
+('Alice’s', 1),
+('Adventures', 1),
+('in', 1),
+('Wonderland', 1),
+('Project', 1),
+('Gutenberg’s', 1),
+('Adventures', 1),
+('in', 1),
+('Wonderland', 1),
+('Project', 1),
+('Gutenberg’s', 1)]
+
+rdd=spark.sparkContext.parallelize(data)
+rdd2=rdd.reduceByKey(lambda a,b: a+b)
+
+for element in rdd2.collect():
+    print(element)

@@ -49,8 +49,13 @@ Hive datatypes:
                         buckets | clusters
 
 
+non-interactive mode of hive query execution::
+    hive -e "select * from hive_training.employee"
 
+for executing series of hive queries:
 
+    -place all hive queries in a .q file and then 
+    hive -f wordcount.q 
 
 !ls  ---> to run linux commands in hive shell
 dfs -ls / -->to run linux commands and hdfs commands in hive shell
@@ -121,13 +126,13 @@ External Table:
     CREATE EXTERNAL TABLE IF NOT EXISTS EMPLOYEE_EXT (eid int, name String, salary String, designation String)
     COMMENT 'Employee details'
     ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY '\t'
+    FIELDS TERMINATED BY ','
     LINES TERMINATED BY '\n'
     LOCATION '/user/training/empmgmt/input';
 
 /temp/hive/_resultcache_ --> to see query result files of hivw in hdfs ---> it temporary hive workspace in hdfs
 
-        CREATE TABLE my_table(a string, b string, ...)
+        CREATE TABLE my_table(a string, b string)
         ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.OpenCSVSerde'
         WITH SERDEPROPERTIES (
         "separatorChar" = "\t",
@@ -282,6 +287,12 @@ try: only bucketing without partitioning
         INSERT INTO TABLE EMPLOYEE_B (eid, name, salary, designation, yoj) VALUES (100, 'Kumar', 50000, 'Admin', '2020');
 
 
+---creating partititon on existing table 
+
+ALTER TABLE page_view ADD PARTITION (dt='2008-08-08', country='us') location '/path/to/us/part080808'
+                          PARTITION (dt='2008-08-09', country='us') location '/path/to/us/part080809';
+
+
 request goes 
         hive client ----> hive server  ----> metastore 
 
@@ -297,10 +308,10 @@ request goes
 
 ------------File formats
 
-    CREATE TABLE IF NOT EXISTS employee_json (eid int, name String, salary String, designation String)
+    CREATE TABLE IF NOT EXISTS employee_avro (eid int, name String, salary String, designation String)
     COMMENT 'Employee details'
     ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.JsonSerDe'
-    STORED AS TEXTFILE;
+    STORED AS AVRO;
 
     insert into employee_json values(1,"Ram",70000,"Associate");
 
@@ -315,17 +326,18 @@ request goes
     INSERT OVERWRITE DIRECTORY '/user/training/empmgmt/output' SELECT * FROM employee_json;
 
 # Writing data to local file system
+
     INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output/' SELECT * FROM employee_json;
 
     INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' SELECT * FROM employee_json;
 
-    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS AVRO SELECT * FROM employee_json ;
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/'  STORED AS AVRO SELECT * FROM employee_json ;
     
-    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS ORC SELECT * FROM employee_json ;
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/'  STORED AS ORC SELECT * FROM employee_json ;
 
-    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS PARQUET SELECT * FROM employee_json ;
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/'STORED AS PARQUET SELECT * FROM employee_json ;
 
-    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/' ROW FORMAT DELIMITED FIELDS TERMINATED BY ',' STORED AS SEQUENCEFILE SELECT * FROM employee_json ;
+    INSERT OVERWRITE LOCAL DIRECTORY '/home/ram/output2/'  STORED AS SEQUENCEFILE SELECT * FROM employee_json ;
 
 
 
@@ -355,10 +367,88 @@ file formats:
 
     Avro: row based storage,well suited for write heavy transactional loads
             stored in binary ,serialized compressed format
+            header 
+            blocks
+                rows
+
+    RC: Row Column
 
     ORC:  optimized row columnar ,optimized for read heavy Analytical work loads
-            column oriented storage,almost all hive datatypes supported,compatible on HiveQL
+            column oriented storage,almost all hive datatypes supported,compatible on HiveQL,compression higher than parquet.
+            Stripes--(each stripe 250mb)
+                index data
+                row data
+                stripe footer
+
 
     parquet: column based storage,well suited for ready heavy Analytical work loads
              widely used format with spark,high compression rates
-        
+             row groups
+               columns
+                 pages
+
+    SEQUENCEFILE: used to combine large number of small files into less number of large files
+                    data is stored as key : value
+                                     [filename : filecontent]
+
+
+
+-----------Compression Techniques
+
+GZIP-->
+        data is not splittable
+        not suitable for map reduce 
+        good choice for cold data storage
+        good for backup storage
+        takes more resources to compress
+
+
+BZIP2 --->
+        suited for cold data compressing
+        comp rate>gzip
+        takes more time
+
+LZO -->
+        widely used
+        low comp rate
+        very fast compression and decompression
+        cpmpressed data is splittable
+        best suited for mr jobs
+SNAPPY --->
+        avareage comp rate
+        compressed data is not splittable with text format
+        splittable with avro and sequence
+        snappy should always be associated with avro or sequence formats
+
+----------------Hive Functions
+
+--UDF---USer Defined Functions
+    -creating functions
+    -registering function
+
+
+--UDF ---USer Defined Functions
+---inherit udf class
+--implement udf
+--register it in hive
+--
+
+
+--UDAF --User Defined Aggregate Functions
+
+
+--
+
+--------------different ways of loading data into hdfs
+--using hdfs client
+--mr job
+--hive load
+--
+
+-----------------different ways of exporting data from hdfs
+--using hdfs client
+--mr job
+--hive insert overwrite
+
+
+sqoop -- to import and export structured data(database tables)
