@@ -6,6 +6,8 @@ step2: configure sqoop to connect Hadoop
 step3: configure sqoop to connect to mysql
 
 
+sudo mysql 
+
     sqoop commands are inturn converted to mr jobs and get the things done
    --connect ot databse and 
     sqoop import <table_name> <target file_path> --m 2     -->specifying to map tasks
@@ -22,3 +24,53 @@ step3: configure sqoop to connect to mysql
         fetch metadata
         submit map only job
         map tasks created and data is loaded to hdfs storage
+
+
+importing data from rdbms to hdfs file system:
+
+        sqoop list-databases --connect jdbc:mysql://localhost/?useSSL=false --username sqoop --password sqoop
+
+        #List Tables
+        sqoop list-tables --connect jdbc:mysql://localhost/sqoop_training?useSSL=false --username sqoop --password sqoop
+
+        #Import
+sqoop import \
+--connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--username sqoop \
+--password sqoop \
+--table COUNTRY1 \
+--target-dir /user/training/sqoop3 \
+--m 1
+
+        #Import incremental
+sqoop import \
+--connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--username sqoop \
+--password sqoop \
+--table COUNTRY \
+--target-dir /user/training/sqoop-inc \
+--check-column UPDATE_TIME \
+--incremental lastmodified \
+--last-value '2021-07-14 12:12:38' \
+--m 1
+--append                       # to add to same directory
+
+
+--query
+--columns
+--
+
+        #Import all table
+        sqoop import-all-tables \
+        --connect jdbc:mysql://localhost/sqoop_training \
+        --username sqoop \
+        --password sqoop \
+
+exporting table from hdfs to rdbms
+
+sqoop export \
+--connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--username sqoop \
+--password sqoop \
+--table COUNTRY1 \
+--export-dir /user/training/sqoop3

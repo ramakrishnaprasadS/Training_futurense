@@ -68,7 +68,17 @@ pyspark --help
 
 
 
- rdd1 = sc.textFile("/home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/wordcount-input.txt")
+----------------------------------------------------------------------
+
+reading the inputfile:
+
+     rdd1 = sc.textFile("/home/ram/futurense_hadoop-pyspark/labs/dataset/wordcount/wordcount-input.txt")
+
+
+
+------------------------------------------------
+
+
  rdd1.getNumPartitions() Returns the number of partitions in RDD
  rdd1.collect() -->collects data from all partitions ..-->[actions]
 rdd2=rdd1.flatMap(lambda x: x.split())
@@ -184,30 +194,6 @@ shared variables:
         rdd.foreach(f) 
         final = num.value 
         print("Accumulated value is -> %i" % (final))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

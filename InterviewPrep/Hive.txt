@@ -48,6 +48,15 @@ Hive datatypes:
                     partitons
                         buckets | clusters
 
+------------
+joins supported:
+    join
+    left outer Join
+    right outer Join
+    full outer Join
+
+
+---------------
 
 non-interactive mode of hive query execution::
     hive -e "select * from hive_training.employee"
@@ -364,6 +373,7 @@ request goes
     Footer
 
 file formats:
+    file compression : text<RC<parquet<ORC
 
     Avro: row based storage,well suited for write heavy transactional loads
             stored in binary ,serialized compressed format
@@ -452,3 +462,42 @@ SNAPPY --->
 
 
 sqoop -- to import and export structured data(database tables)
+
+------------------------------------------------------------------
+sources:
+
+    static: all rdbms
+    dynamic: live application server data(streaming data)
+
+Data Ingestion:(ETL)
+    data movement from source to target ---for analysis---using ETL tools
+
+    if source is static: datastage or sqoop or informatica
+    if source id dynamic: flume or kafka
+
+    in cloud : 
+        AWS glue --can bring data from static sources
+        AWS Kinesis -- can bring data from dynamic sources
+
+Analysis:(main responsibility)
+    if batch processing : hive,spark
+    if online processing: hbase,spark
+
+BI Reports:
+
+
+
+---------------------------
+predefined big data platforms
+    -cloudera
+    -HortonWorks
+
+    in AWS cloud:
+        -EMR and databricks
+
+
+
+
+
+
+

@@ -1,0 +1,17 @@
+from pyspark import SparkContext
+
+sc = SparkContext("local", "movies app Q1")
+movies = sc.textFile("/mnt/c/Users/miles/Downloads/movies/movies.csv")
+
+#-----a) extracting year from movies data set  and storing transformed rdd in hdfs file
+
+movies1=movies.map(lambda x:x.split(',')).map(lambda x:( x[0],x[1],x[1][-5:-1:1],x[2]))
+
+
+movies1.saveAsTextFile("hdfs://localhost:9000/user/training/movies/movies1.csv")
+
+
+#----b) loading ratings data from local to hdfs
+
+hadoop fs -put /mnt/c/Users/miles/Documents/Github/futurense-dataengg-bootcamp/dataset/ratings.csv /user/training/movies/
+

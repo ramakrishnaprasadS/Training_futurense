@@ -1,0 +1,40 @@
+from pyspark.sql import SparkSession
+
+from pyspark.sql.functions import *
+
+spark = SparkSession.builder.appName("movies ratings Q3").getOrCreate()
+
+
+movies1 = spark.read.options(header=True,inferSchema=True).csv(path=hdfs://localhost:9000/user/training/movies/movies1.csv)
+
+ratings = spark.read.options(header=True,inferSchema=True).csv("hdfs://localhost:9000/user/training/movies/ratings.csv")
+
+#--a)year wise no. of movies released
+
+print(movies1.groupBy('YoR').count('movieid').show(truncate=False))
+
+#--b)top 3 rated movie names and genres
+
+mmrdf=movies1.join(ratings,movies1.movie_id ==  ratings.movieid,"inner")
+
+mrdf.createOrReplaceTempView("mr_table")
+
+spark.sql("select rating,moviename from mr_table order by rating desc limit 3").show(truncate=False)
+
+
+#---c)Store the output of query in 
+
+#---textcsv
+
+df1.write.csv("hdfs://localhost:9000/user/training/movies/movies-count")
+
+
+#---ORC
+
+df1.write.ORC("hdfs://localhost:9000/user/training/movies/movies-count-ORC")
+
+
+#---Parquet
+
+df1.write.parquet("hdfs://localhost:9000/user/training/movies/movies-count-parq")
+

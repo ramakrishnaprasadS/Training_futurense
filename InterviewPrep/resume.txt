@@ -1,17 +1,14 @@
 
 summary:
-    Software Developer with around 1.4 years of experience in building  interactive voice applications,
-     possess hands-on experience in solving design implementation challenges in Automation applications. 
-     Inclined towards the field of data engineering with a desire to expand my skill set.
+Software Developer with around 1.4 years of experience in building interactive voice applications.Possess hands-on experience in solving design implementation challenges in Automation applications. Inclined towards the field of data engineering with a desire to expand my skill set.
 
 Professional Experience:
     Data Specialist
     Futurense Technologies 12/2022 - Ongoing  Banglore,Karnataka
-    Tools Used: SQL, Python, Git, AWS Cloud, Big Data, Spark,IBM DataStage
-    Implemented SQL reporting on Hospital management system to gain insights on building various reporting formats.
-    Gained an overview of the whole process of Data Engineering
-    Data processing and analysis done Health Census data using Pandas DataFrames.
-    Gianed  knowledge in IBM Datastage tool,hadoop,mapreduce,hive and spark technologies.
+    Tools Used: SQL, Python, Shell Scripting AWS Cloud, Big Data, Spark,IBM DataStage
+    Implemented SQL reporting on Hospital management system for 50+ use cases
+    Done Data preprocessing and analysis on Health Census data using Pandas Data frames
+    Gained knowledge in IBM Datastage tool,hadoop,mapreduce,hive and Spark,AWS Cloud technologies by working on multiple case studies
 
     Software Developer:
     Tata Consultancy Services Ltd. 05/2021 - 10/2022  Hyderabad,Andhra Pradesh
@@ -21,37 +18,25 @@ Professional Experience:
     These features  enabled self serve flexibility to users thereby 
     reduced 70% of call transfers to helpdesk agents.
     Used unix shellscripting for updating Application config files and Javascript
-    in making backend API calls.
+    in making API calls.
 
 Projects:
 
-    Academic Course Schedule Database
-    Design and implementation   10/2022 -12/2022
-    Tools used: Mysql,python Db connectivity,AWS RDS
-    Hosted the database in AWS RDS and connected to it with Mysql workbench client .
-    Created Academic Course Schedule Databse with 20+ tables by following database design rules,
-    tables normalized till 4NF,created 15+ procedures to ease the CRUD operations on database.
-    Created Indexes for  tables and increased query performance by 40%,
-    implemented 15+ triggers for restricting,logging .
-    Access control was taken care for different user levels and tested it by inserting large
-    number of records using python-mysql database connectivity.
-
-
-    Typing Speed Test
-    Technologies used: HTML, CSS, JS, REST API Calls, Bootstrap
-    Developed an application which measures the time that the user take to complete given paragraph
-    Maintained timer by using APIs setTimeInterval, clearTimeInterval and Updated timer in the UI dynamically using JavaScript DOM operations for every 1 second.
-    Fetched the paragraph from server asynchronously using fetch GET HTTP API call and displayed it on UI by using JavaScript DOM Operations.
-    Displayed time that user took in the UI using JavaScript event listeners once user clicked on submit button, Did form validations for incomplete paragraph.
-    Technologies used: HTML, CSS, JS, REST API Calls, Bootstrap.
-
-    or
-
-    python health census project
-    -----
-    ----
-    ----
-    ----
+    BigData Analytics on Health Insurance data
+    10/2022 - 12/2022
+    Health Insurance data from various sources was processed and Analysed using PySpark.
+    Tools used: PySpark,hadoop hdfs,AWS RDS,Mysql
+    Collected 7 datasets each of size more than 100 MB from different sources in file formats like CSV,json,xlsx
+    Imported and converted them into parquet file format to optimize the storage by 65% and stored in hdfs using PySpark
+    Preprocessed and performed analytics using PySpark Data frames and PySpark SQL queries, uploaded the results to AWS RDS for reporting
+    
+    Academic Course Schedule System
+    05/2019 - 07/2019
+    Tools used: MySQL,Mysql Connector,AWS RDS
+    Created Academic Course Schedule Database with 20+ tables normalized till 4NF,created 15+ procedures to ease the CRUD operations on database
+    Created Indexes for tables and increased query performance by 40%
+    Implemented 10 triggers for auto updating,inserting and used signals for displaying error messages
+    Tested the database by inserting large number of records using Python MySQL database connectivity
 
 
     Education
@@ -64,34 +49,27 @@ Projects:
     python
 
     Technology Skill sets
-    Pandas  6/10
-    Hadoop  6/10
+    Pandas  7/10
+    Hadoop  7/10
     Hive    6/10
-    Spark   6/10
-    AWS     5/10
-    DataStage 6/10
-    Git     6/10
+    PySpark   6/10
     shell Scripting 6/10
-    JavaScript 6/10
-    Webdesign  6/10
+    AWS     6/10
+    DataStage 5/10
+    CSS,HTML,BootStrap,Javascript 7/10
 
 
     Certifications:
-    IRC Certifications in Python,Databases,
-    static and responsive webdesign ,Javascript.
+    Web Development Boot camp
     NxtWave 07/2022 - 11/2022
 
     Programming and problem solving using Python
     NPTEL IIT Madras 03/2020
 
-    Achievements:
-    B.Tech Branch Topper in 2021
-    with 9.43/10 CGPA
 
-    Secured 983/1000 marks in Intermediate
-    Board Exams and became eligible for Higher
-    Education Scholorship by APSHE 
-    under INSPIRE Scheme.
+    Achievements:
+    Eligible For Higher Education Merit Scholarship by APSHE under INSPIRE Scheme
+    Secured 983/1000 marks in Intermediate Education
 
     Interests
     playing volleyball,listening music

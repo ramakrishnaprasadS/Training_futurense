@@ -274,5 +274,49 @@ Saving the pyspark sql dataframes:
 
 
 
+importing - exporting - tables from databases through pysaprk:
 
+    -- Add sqoop user
+        CREATE USER 'pyspark'@'localhost' IDENTIFIED BY 'pyspark';
+        GRANT ALL PRIVILEGES ON *.* TO 'pyspark'@'localhost' WITH GRANT OPTION;
+
+    -- Setup data for sqoop demo
+        CREATE SCHEMA pyspark_training;
+
+        USE pyspark_training;
+
+pyspark --jars /home/ram/mysql-connector-j-8.0.32/mysql-connector-j-8.0.32.jar
+
+    # Loading data from a JDBC source
+jdbcDF = spark.read \
+.format("jdbc") \
+.option("url", "jdbc:mysql://localhost") \
+.option("dbtable", "pyspark_training.COUNTRY") \
+.option("user", "sqoop") \
+.option("password", "password") \
+.load()
+
+jdbcDF = spark.read \
+  .format("jdbc") \
+  .option("url", "jdbc:mysql://localhost:3306/pyspark_training") \
+  .option("driver", "com.mysql.jdbc.Driver") \
+  .option("dbtable", "EMPLOYEE") \
+  .option("user", "pyspark") \
+  .option("password", "pyspark") \
+  .load()
+
+df.createOrReplaceTempView("EMPLOYEE")
+df2.write \
+    .format("jdbc") \
+    .option("url", "jdbc:mysql://localhost:3306/pyspark_training") \
+	.option("driver", "com.mysql.jdbc.Driver") \
+    .option("dbtable", "EMPLOYEE2") \
+    .option("user", "pyspark") \
+    .option("password", "pyspark") \
+    .save()
+
+
+--running spark code as .py file with jdbc ...loading to sql databsese
+
+ spark-submit --jars '/home/ram/mysql-connector-j-8.0.32/mysql-connector-j-8.0.32.jar' bnk_transform.py
     

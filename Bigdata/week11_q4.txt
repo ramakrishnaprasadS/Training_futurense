@@ -1,0 +1,20 @@
+
+#--exporting year wise movies count from hdfs
+
+sqoop export \
+--connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--username sqoop \
+--password sqoop \
+--table mv_cnt \
+--export-dir /user/training/movies/movie-count
+
+
+#--importing top5 year wise movies count into hdfs filesystem
+
+sqoop import \
+--connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--username sqoop \
+--password sqoop \
+--table top5_cnt \
+--target-dir /user/training/movies/top5year \
+--m 2

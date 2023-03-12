@@ -1,0 +1,39 @@
+
+streaming Vs batch
+
+streaming: continuous data arrival or continous flow of events
+
+    ex: continous flow of tweets is stream of tweets
+    ex: uber wants to collect the gps of all taxis at location, and gps location of taxis is obtained as stream 
+    ex: Stream of log messages
+
+
+usecases:
+
+    1.Amazon detecting if order placed is Fraud.
+        order stream ------> Order Fraud Detection ------> Order Accepted or Cancelled
+        we will get stream of orders ....we will place them in a system to process orders....and will decide whtether it is fraud or not
+
+    2.Log Processing Platform
+        Web Log Stream ---->Log Processing System ---->Alert Raised Or Not
+        if there is eeror message in in coming log streams......we need send the alert...
+
+    3.Taxi sharing Platform
+        Customer Taxi Request ----> Customer and Driver Matcing----Taxi Allotment
+        should collect the stream of incoming requests.....and process them ....to get taxi allocated
+
+Basics of Spark Streaming:
+
+    Dstream -->sequence of rdds over time
+
+    Dstream ---> rdd1 rdd2 rdd3   .....
+
+    batch interval: the time interval for which we want to batch the events
+                    ex; for every 10sec we will process the batch
+
+    Spark streaming context:
+        -Entry Point for streaming Application
+        -Manages your streaming application
+        -ineracts with spark context and makes the job done
+        
+    

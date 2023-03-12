@@ -1,0 +1,19 @@
+
+from pyspark import SparkContext
+
+sc = SparkContext("local", "movies app Q2")
+movies1 = sc.textFile("hdfs://localhost:9000/user/training/movies/movies1.csv")
+
+#--a) total no. of movies released
+
+print(movies1.count())
+
+
+#--b)year wise no. of movies released
+print(movies1.groupBy(lambda x:x[2]).mapValues(len).sortBy(lambda x:x[1]).collect())
+
+#--c)year wise trending genres
+
+for key,val in movies1.groupBy(lambda x:x[2]).collect():
+    print(key,val[0])
+    break

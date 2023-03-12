@@ -1,0 +1,32 @@
+batch processing---------bigdata(mapreduce,hive,pig)-------spark()-----------whole table scan
+Interactive analysis-----spark()----
+Streaming data Analysis-----spark()----
+
+------hbase---bigdata(widely used Nosql database)-----online analysis
+
+
+
+
+rdd vs dataframe vs dataset
+
+--unstructured data analysis
+--analysisi with pyspark datasets
+
+
+---------------------------------
+
+hive is a datawarehouse 
+
+oozie -- for scheduling jobs
+Airflow --for scheduling jobs
+
+----------------------------------------
+
+internal tables---for analysising input data
+external table ---for storing outputs
+
+----
+
+
+
+
