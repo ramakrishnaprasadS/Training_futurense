@@ -50,3 +50,7 @@ Map Reduce Advanced concepts
 -pig latin - SCRIPTING LANGAUAGE TO WRITE MAP REDUCE PROGRAMS.its an abstarction of map reduce
 
 --Map reduce program written by hive is highly optimized and fast.
+
+
+
+---> rfr nts fr fthr inf

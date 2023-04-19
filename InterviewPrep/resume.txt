@@ -74,6 +74,71 @@ Projects:
     Interests
     playing volleyball,listening music
 
+-----------------------------------------------------
+
+Hive HealthCare Analytics
+
+10/2022 - 12/2022 Guntur,Andhra Pradesh
+
+HealthCare data from Mysql Database is imported to 
+HDFS and Analysed using Hive queries
+
+Tools: Hadoop,Sqoop,Hive,MySql
+
+Imported 12+ tables from MySQL database using Sqoop
+
+Created partitioned ,bucketed tables,materialized views,indexes and increased the hive query performance by 30%
+
+Anlaysed the data using hive queries for 15+ usecases using joins,window functions,CTE
+stored the results in External tables and further exported
+them to MySQL Database using Sqoop
+
+---------------------------------
+
+Done Pyspark Sales Analytics for 10+ usecases on sales data using Azure Databricks
+
+
+AWS , Azure Cloud
+
+--------------------------------------------------------------
+
+Pyspark OTT Analytics using Azure Databricks
+
+Data Pipeline implementation to preprocess and Analyse OTT datasets that are received on daily basis 
+using Azure Databricks.
+Tools : Azure Databricks,Pyspark,Data Factory ,Azure SQL
+-Preprocessed the OTT raw datasets stored in Blob container by mounting them in Azure Databricks
+-Analysed 10+ usescases on them using Pyspark DataFrames,exported the processed data and analysis results to Azure SQL database.
+-Moved the processed files to another blob conatiner and Scheduled this entire process 
+ in Azure Data Factory Pipeline using Schedule trigger to run in daily basis
+
+
+
+ ---------------------------------------------
+ Academic Course Schedule System
+
+
+
+ -----------------------------
+ Airflow
+
+Developed airflow operators and sensors to support the data workflows from source to target
+and conducted end to end airflow pipelines,optimized the performance by fine tuning the dags.
+
+-------------------------
+
+
+
+ 
+
+ 
+
+
+
+ 
+
+
+
 
 
 

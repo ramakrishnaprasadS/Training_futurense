@@ -1,6 +1,36 @@
 
 kafka ---distributed messaging queue,also acts as an input buffer to queue th input stream 
 
+message semantics:
+    --Queue ---FIFO---point to point communication
+    --topic --pub sub --one to many
+
+
+kafka Architecture
+    --producer   --produce the events
+    --broker     --stores and process the events
+    --consumer   --consumes the events
+    --zookeper -- co-ordibation service and  maintains metadata 
+
+producer-->broker--->partitions
+kafka concepts:
+    message/event
+        -topic
+            -partitions (deafualt 1 partition , 1 replication)
+                (in replicas there will be leader partition and folower/in sync replica(ISR))
+                zookeper will elect any ISR as leader ,when leader is down
+        --offset : it will be specific to each partition to uniquiley identify message in the partition
+
+        ---order of messages is not guarenteed if there multiple partitions for a topic
+
+        --consumer group : with multiple consumer instances ,we can consume the messages parallely with faster rate
+           (ideally no consumer instances should be equal to number of partitions)
+
+---while connecting to kafka server....we can give any broker ip and port of that server
+
+
+
+
 #Create Topic
 bin/kafka-topics.sh --create --bootstrap-server localhost:9092 --replication-factor 1 --partitions 1 --topic word-count
 
@@ -135,7 +165,7 @@ loanStatusCountsWindowedDF.printSchema()
 outputDF =  loanStatusCountsWindowedDF\
                 .selectExpr("CAST(status AS STRING) AS key", "to_json(struct(*)) AS value")
 
-
+# writing to a kafka topic
 
 query = outputDF\
     .writeStream \
@@ -157,5 +187,15 @@ query = outputDF\
     .start()
 
 -----------------------------
+
+
+streaming_df \
+    .groupBy("genres") \
+    .agg(count("movieId").alias("movie_count"))
+
+
+finding count of movies ,group by genres, sorting the order by count in last 5 mins
+
+
 
 

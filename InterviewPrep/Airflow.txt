@@ -1,0 +1,43 @@
+coder2g
+--workflow management tools
+
+
+    oozie --with hadoop stack
+        --
+    Airflow --developed with python
+        -open sourced bu airbnb in 2015
+        -used by 200+ companies
+        -we can code in python to orchestrate using airflow
+
+
+data ingestion -----> data Validation ---->Data Transformation ---->Data Export
+
+Airflow workflow
+
+--we need to create dag
+    --DAG execution is unidirectional
+
+    -DAG -->series of tasks(ingestion,validation,Transformation,export)
+        -tasks
+            -operator(bash operator,python operator) 
+
+
+--Airflow can be set up in 
+   cluster mode
+   standalone mode
+
+--Airflow componenets
+    -scheduler
+    -Webserver
+    -Metastore -any rdbms can be used as metastore
+    -Executor --
+    -Worker
+
+--airflow standalone  -->initializes db,creates roles,permissions,creating user called admin,brigging up triggerer scheduler,starting scheduler,airflow is ready
+
+--localhost:8080 -->web UI of Airflow
+    username:admin
+    password: obtained at end of starting airflow
+
+                         
+        

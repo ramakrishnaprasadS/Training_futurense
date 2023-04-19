@@ -125,3 +125,5 @@ having min_sal>=3000;
 select round(132.3);
 
 select ceil(132.3);
+
+

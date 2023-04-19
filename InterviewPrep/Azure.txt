@@ -1,0 +1,14 @@
+Synapse to Power BI
+
+step1: create resource group
+step2 : create storage account
+step3: Create synapse workspace
+step4: create a sql pool,create table and load data into that table
+step5: select the sql pool from sql pools that we want to visualize----copy the Workspace SQL 				 endpoint
+step6: Go to power bi and get resource -->Azure-->Azure Synapse Analytics
+step7: Now give Workspace SQL endpoint of sql pool copied--import--next
+step8: Now select database-->give synapse database server name and password
+step9: Now select the table from the imported pool in navigator menu
+step10: load the data of selected table and Visualize....
+
+

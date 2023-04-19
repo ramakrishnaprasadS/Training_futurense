@@ -29,7 +29,7 @@ select s1.first_name,s1.salary, ( Select Sum(salary) From employees S2
       ;
 use hr_db;
 select first_name,salary,                     ---cummulative sum
-sum(salary) over(order by salary desc) as running_salary 
+sum(salary) over(order by salary desc ) as running_salary 
 from employees;
 
 
@@ -59,6 +59,7 @@ from employees;
 ---comparing functions--to compare value of the current row wrt previous/next row
 --LAG --compares with previous row
 --LEAD --compares with next row
+
 
 select first_name,salary,
 LAG(salary) over() as lag_sal from employees;   ---gives salary of previous employee

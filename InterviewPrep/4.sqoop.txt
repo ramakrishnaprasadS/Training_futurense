@@ -42,6 +42,7 @@ sqoop import \
 --target-dir /user/training/sqoop3 \
 --m 1
 
+
         #Import incremental
 sqoop import \
 --connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
@@ -68,9 +69,12 @@ sqoop import \
 
 exporting table from hdfs to rdbms
 
+----before export --create empty table in client db
+
 sqoop export \
---connect jdbc:mysql://localhost/sqoop_training?useSSL=false \
+--connect jdbc:mysql://localhost/sqoop_training \
 --username sqoop \
 --password sqoop \
 --table COUNTRY1 \
 --export-dir /user/training/sqoop3
+--input-fields-terminated-by ','

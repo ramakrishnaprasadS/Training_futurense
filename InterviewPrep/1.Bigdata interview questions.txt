@@ -14,12 +14,14 @@ data
     un structured --> log files,txt,pdfs,images,audios  --> enormous
 
 sources of bigdata
-    -NYSE generates about 1 TB of new trade data per data to perform stock trading analytics
+    -NYSE generates about 1 TB of new trade data per day to perform stock trading analytics
+    -data from IOT devices
+    -dat from     
 
 -Big data in industry
 -Data warehouse--eg. redshift,teradata
     -compute grid --processing
-    -storage grid
+    -storage grid  --data storage
 -Data Mart -- sub divisions of data warehouse where curated date is kept and available for further analysis
 
 --->limitations of tradititonal BI Architechture
@@ -62,7 +64,7 @@ active name node --> responsible for managing meta data of all nodes(how many bl
        -edit logs,
        -fs image -snapshot of edit logs
 standby name node --> when active name node is down ,stand by acts as active
-     shared edit locks,node having write access is active node
+     shared edit logs,node having write access is active node
 data node  --> data is stored in data nodes as blocks
 
 task tracker --> 
@@ -141,6 +143,8 @@ hadoop fs -stat "required parameters" file_path -->gives the complete file stati
 
  
 hadoop fs find -type f -size 100  ----------> files larger than 1gb in a directory
+
+hadoop fs -du -h filepath ---> gives the disk usage of file in human readble format
 
 
 

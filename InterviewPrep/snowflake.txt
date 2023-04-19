@@ -1,0 +1,26 @@
+create table sales
+(
+region varchar(150),
+country varchar(150),
+item_type varchar(150),
+sales_channel varchar(150),
+order_priority varchar(10),
+order_date varchar(50),
+order_id varchar(100),
+ship_date varchar(150),
+unit_sold int,
+unit_price float,
+unit_cost float,
+total_revenue float,
+total_cost float,
+total_profit float
+);
+
+snowsql -a khfdoas-ip15275 -u ramakrishna
+
+use mydb1.library;
+
+PUT file://C:/Users/miles/Downloads/5000_Sales_Records.csv @~/staged;
+
+COPY INTO sales FROM '@~/staged/5000_Sales_Records.csv.gz' FILE_FORMAT = ( TYPE = CSV,COMPRESSION=GZIP,SKIP_HEADER=1);
+

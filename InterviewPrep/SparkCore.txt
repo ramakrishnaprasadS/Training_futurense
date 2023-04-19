@@ -122,6 +122,7 @@ rdd.take(number_of_elements)
 
 
 
+
 ****coalesce is better than repartiton to reduce the number of partitions
 
 RDD Storage
@@ -284,3 +285,4 @@ rdd2=rdd.reduceByKey(lambda a,b: a+b)
 
 for element in rdd2.collect():
     print(element)
+

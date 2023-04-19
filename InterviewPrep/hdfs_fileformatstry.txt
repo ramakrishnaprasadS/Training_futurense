@@ -82,7 +82,8 @@ CREATE TABLE my_table(a string, b string)
         WITH SERDEPROPERTIES (
         "separatorChar" = "\t",
         "quoteChar"     = "'",
-        "escapeChar"    = "\\"
+        "escapeChar"    = "\\",
+        
         )  
         STORED AS TEXTFILE;
 

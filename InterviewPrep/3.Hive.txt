@@ -17,7 +17,7 @@ usecases:
    --data loading is efficient and fast
 --Hive best suited for hdfs tables,and large volumes of structured data
 
---Hive tables just provide structure to hdfs data
+-
 
 limitations:
     - does not support row level updates,deletes.Data can be overwritten or appended
@@ -25,7 +25,7 @@ limitations:
     - no real time processing
 
 Hive components
-    - shell -ui to write queries,...it is a client to connect to hive and execute queries
+    - shell -ui to write queries,...it is a client to connect to hive and execute queries 
     -Metastore - schema of tables is stored , by default derby as metastore, we can also link any rdbms as metastore
     -driver    -- takes the query from shell and sends it to compiler
     -compiler -parses sql query and translates into mr program and prpares execution plan by collaborating with metastore
@@ -77,6 +77,23 @@ dfs -rm /user/hive/warehouse/db1.db/employee/000000_0;
 
 
  ---Hive shell is outdated and not recomended to work on hive
+ -----------------------------------------------
+
+create table internal1(
+sno int,
+name string
+)
+ROW FORMAT SERDE 'org.apache.hadoop.hive.ql.io.orc.OrcSerde'
+STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.orc.OrcInputFormat'
+OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.orc.OrcOutputFormat'
+location 'hdfs://localhost:9000/user/hive/warehouse/hive_training.db/internal11';
+
+
+
+
+
+
+ --------------------------------
 
 
  ----------------Beeline Shell -------
@@ -126,8 +143,8 @@ Hive Managed Tables
 
 External Table:
     -created using "external" keyword
-    -hive just owns metadata,and not actual data of external table
-    -when 
+   
+     
     -
 
 
@@ -180,12 +197,7 @@ Partition table: --tables with huge records are made into partitions based on a 
 Bucketed/clustered Table: In each partiton ,records of specified condition(key) will be grouped in one bucket 
 
     # Create cluster table
-    CREATE TABLE IF NOT EXISTS EMPLOYEE_CLUS (eid int, name String, salary String, designation String)
-    COMMENT 'Employee details'
-    PARTITIONED BY (yoj String) CLUSTERED BY (eid) INTO 3 BUCKETS
-    ROW FORMAT DELIMITED
-    FIELDS TERMINATED BY '\t'
-    LINES TERMINATED BY '\n'
+    +
     STORED AS TEXTFILE;
 
     # Insert data into partition table
@@ -391,7 +403,7 @@ file formats:
                 stripe footer
 
 
-    parquet: column based storage,well suited for ready heavy Analytical work loads
+    parquet: column based storage,well suited for read heavy Analytical work loads
              widely used format with spark,high compression rates
              row groups
                columns
@@ -494,6 +506,12 @@ predefined big data platforms
 
     in AWS cloud:
         -EMR and databricks
+
+---------------
+
+create table xyz(id int,city string,country string)
+clustered by(city) into 2 buckets stored as orc 
+tblproperties('transactional'='true');
 
 
 

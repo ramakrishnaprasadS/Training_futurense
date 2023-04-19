@@ -6,4 +6,6 @@ Flume Architecture:
         Source   --> Channel --> HDFS Sink   --> Write to HDFS
         Source   --> Channel -->Kafka Sink   ---> Publish to kafka topic
 
-  
+
+flume-ng agent -c /home/cloudera/source -f /home/files1/flume-flatfile_agent.conf -n flatfile_agent
+
