@@ -42,7 +42,7 @@ sources of bigdata
         -economical  -->overall cost of cluster is cheaper than enterprise servers
         -reliable  -->data replication in other nodes
         -flexible
---hadoop 3.3.4 is latest version of hadoop
+--hadoop 3.3.6 is latest version of hadoop
     -handled by YARN
     -uses intra data node balancer
     -All features + microsoft Azure data lake system
@@ -59,12 +59,29 @@ orchestration tools ---> to automate and shcedule the datapipeline(ETL)
                         eg: Apapche oozy,Airflow
 
 
-active name node --> responsible for managing meta data of all nodes(how many blocks,datanodes where and what replicas...etc..)
-       secondaray name node acts as backup for active name node and both will be in sync
-       -edit logs,
-       -fs image -snapshot of edit logs
-standby name node --> when active name node is down ,stand by acts as active
-     shared edit logs,node having write access is active node
+Secondary namenode is just a helper for Namenode.
+
+It gets the edit logs from the namenode in regular intervals and applies to fsimage.
+
+Once it has new fsimage, it copies back to namenode.
+
+Namenode will use this fsimage for the next restart, which will reduce the startup time.
+
+Secondary Namenode's whole purpose is to have a checkpoint in HDFS. Its just a helper node for namenode. That’s why it also known as checkpoint node.
+
+But, It cant replace namenode on namenode's failure.
+
+So, Namenode still is Single-Point-of-Failure.
+
+To overcome this issue; STANDBY-NAMENODE comes into picture.
+
+It does three things:
+
+merging fsimage and edits-log files. (Secondary-namenode's work)
+receive online updates of the file system meta-data, apply them to its memory state and persist them on disks just like the name-node does.
+
+Thus at any time the Backup node contains an up-to-date image of the namespace both in memory and on local disk(s).
+Cluster will switch over to the new name-node (this standby-node) if the active namenode dies.
 data node  --> data is stored in data nodes as blocks
 
 task tracker --> 
